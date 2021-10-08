@@ -1,0 +1,40 @@
+/* const express = require('express');
+const app = express();
+const port = 3000;
+
+// / = ruta RAIZ
+app.get('/', (req, res) => res.send('Hello World!'));
+
+// Se inicia un servidor y la app escucha en el puerto 3000, se accede mediante http://localhost:3000
+app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`)); */
+
+const http = require('http');
+
+const hostname = 'localhost';
+const port = 3000;
+
+const server = http.createServer((req, res) => {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Hello, World!\n');
+});
+
+server.listen(port, hostname, () => console.log(`Server running al http://${hostname}:${port}`));
+
+
+//npm = Node Package Manager --> Administrador de paquetes de Node
+//www.npmjs.com
+//modulo nodemon : es como el GoLive, para no estar reiniciando el servidor cada vez que se haga un cambio en el codigo. Al guardar, se actualiza solo.
+// npm i nodemon -D : se instala y se agrega en el devDependencies en el package-json
+// npx nodemon nombreApp.js (PARA EJECUCION)
+
+//package-json (npm init): dar informacion de la app que se esta creando.
+//Importante: 
+//      * Lleva registro de las dependecias (modulos) que se utilizan en la app. Cuando dicha app se suba aun servidor real, el servidor
+//      sabra que modulos instalar (ejecuta npm install)
+//      * En la seccion script se puede agregar una accion "start", donde se le puede indicar cosas, p.e. que ejecute la app (app.js) al
+//      escribir npm start
+
+
+
+/* res.sed('respuesta') --> se envia una respuesta. */

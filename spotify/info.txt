@@ -1,0 +1,5 @@
+base address WebAPI: https://api.spotify.com
+
+kill server en cmd: CTRL+C
+
+HTTP HEADERS: https://diego.com.es/headers-del-protocolo-http
