@@ -12,15 +12,15 @@ app.use(express.static(__dirname + '/public'))
    .use(cors())
    .use(cookieParser());
 
-
+//GlOBAL VARIABLES
 const spotifyClientId = 'f86de6d8a82e43d499d86dc1ad93b483';
 const spotifyClientSecret = '99cc9f4e02434fd7b176132f505766b2';
 const spotifyRedirectUri = 'http://localhost:3000/callback';
-
 let stateKey = 'spotifyAuthState';
 
+//ROUTS
 app.get('/login', (req, res) => {
-    let spotifyScopes = 'user-read-private user-read-email';
+    let spotifyScopes = 'user-read-private user-read-email user-library-read user-modify-playback-state';
     let spotifyState = generateRandomString(16);
     res.cookie(stateKey, spotifyState);
 
@@ -71,10 +71,12 @@ app.get('/callback', (req, res) => {
                 }
 
                 request.get(opcionesUserInfo, (error, response, body) => {
-                    console.log(body);
+                    //console.log(body);
                 })
             
-                res.redirect(`/refresh_token/:${spotifyRefreshToken}`);
+                // res.redirect(`/refresh_token/:${spotifyRefreshToken}`);
+                //res.redirect(`/userAlbums/:${spotifyAccessToken}`);
+                res.redirect(`/anterior/:${spotifyAccessToken}`);
             }
         });
 
@@ -82,6 +84,9 @@ app.get('/callback', (req, res) => {
     } 
 });
 
+/**
+ * Resfrescar token
+ */
 app.get('/refresh_token/:refresh_token', (req, res) => {
     let refresh_token_algo = req.params.refresh_token.substring(1);
     let spotifyUrl = 'https://accounts.spotify.com/api/token';
@@ -97,10 +102,54 @@ app.get('/refresh_token/:refresh_token', (req, res) => {
         json: true
     };
     request.post(spotifyAuthoForm, (error, response, body) => {
-        console.log(body);
+        //console.log(body);
     })
 });
 
+/**
+ * 
+ */
+app.get('/userAlbums/:access_token', (req,res) => {
+    console.log(' **** Obtener album ****');
+    let spotifyAccessToken = req.params.access_token.substring(1);
+    const opcionesUserInfo = {
+        url: 'https://api.spotify.com/v1/me/albums',
+        headers: { 'Authorization': 'Bearer ' + spotifyAccessToken},
+        json: true
+    }
+
+    request.get(opcionesUserInfo, (error, response, body) => {
+        if(error){
+            console.log(error);
+        } else {
+            console.log(response.statusCode);
+            console.log(body);
+            console.log(body.items[0].album);
+        }
+    })
+});
+
+/**
+ * 
+ */
+ app.get('/anterior/:access_token', (req,res) => {
+    console.log(' **** Cambiar anterior cancion ****');
+    let spotifyAccessToken = req.params.access_token.substring(1);
+    const opcionesUserInfo = {
+        url: 'https://api.spotify.com/v1/me/player/previous',
+        headers: { 'Authorization': 'Bearer ' + spotifyAccessToken},
+        json: true
+    }
+
+    request.post(opcionesUserInfo, (error, response, body) => {
+        if(error){
+            console.log(error);
+        } else {
+            console.log(response.statusCode);
+            console.log(body);
+        }
+    })
+});
 
 
 console.log(`Server activo en el puerto ${app.get('port')}`);
