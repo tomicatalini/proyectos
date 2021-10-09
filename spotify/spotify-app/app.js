@@ -70,7 +70,7 @@ app.get('/callback', (req, res) => {
                     json: true
                 }
 
-                request.get(opcionesUserInfo, (error, response, body) => {
+                request.get(opcionesUserInfo, (error, response, body) => { 
                     //console.log(body);
                 })
             
