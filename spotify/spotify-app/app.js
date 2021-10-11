@@ -19,10 +19,22 @@ const spotifyRedirectUri = 'http://localhost:3000/callback';
 let stateKey = 'spotifyAuthState';
 
 //ROUTS
+app.get('/', () => {
+    res.redirect('/public/index.html');
+});
+
 app.get('/login', (req, res) => {
     let spotifyScopes = 'user-read-private user-read-email user-library-read user-modify-playback-state';
     let spotifyState = generateRandomString(16);
     res.cookie(stateKey, spotifyState);
+
+    console.log(querystring.stringify({
+        response_type: 'code',
+        client_id: spotifyClientId,
+        scope: spotifyScopes,
+        redirect_uri: spotifyRedirectUri,
+        state: spotifyState
+    }));
 
     res.redirect('https://accounts.spotify.com/authorize?' +
                     querystring.stringify({
@@ -43,6 +55,7 @@ app.get('/callback', (req, res) => {
     if(spotifyCode === null || spotifyState !== spotifyStoredState){
         console.log('Error');
     } else {
+        
         let spotifyUrl = 'https://accounts.spotify.com/api/token';
         const spotifyAuthoForm = {
             url: spotifyUrl,
@@ -61,22 +74,30 @@ app.get('/callback', (req, res) => {
             if(error){
                 console.log('Se pudrio la momia: ', error);
             } else {
-                var spotifyAccessToken = body.access_token,
-                    spotifyRefreshToken = body.refresh_token;
+                // let spotifyAccessToken =  body.access_token;
+                // let spotifyRefreshToken = body.refresh_token;
                 
-                const opcionesUserInfo = {
-                    url: 'https://api.spotify.com/v1/me',
-                    headers: { 'Authorization': 'Bearer ' + spotifyAccessToken},
-                    json: true
-                }
+                let data = {
+                    access_token: body.access_token,
+                    refresh_token: body.refresh_token};
 
-                request.get(opcionesUserInfo, (error, response, body) => { 
-                    //console.log(body);
-                })
+                console.log(data.access_token);
+                
+                res.redirect('http://localhost:3000/index.html#' + querystring.stringify(data));
+
+                // const opcionesUserInfo = {
+                //     url: 'https://api.spotify.com/v1/me',
+                //     headers: { 'Authorization': 'Bearer ' + spotifyAccessToken},
+                //     json: true
+                // }
+
+                // request.get(opcionesUserInfo, (error, response, body) => { 
+                //     //console.log(body);
+                // });
             
-                // res.redirect(`/refresh_token/:${spotifyRefreshToken}`);
-                //res.redirect(`/userAlbums/:${spotifyAccessToken}`);
-                res.redirect(`/anterior/:${spotifyAccessToken}`);
+                //res.redirect(`/refresh_token/:${spotifyRefreshToken}`);
+                // res.redirect(`/userAlbums/:${spotifyAccessToken}`);
+                
             }
         });
 
@@ -106,14 +127,20 @@ app.get('/refresh_token/:refresh_token', (req, res) => {
     })
 });
 
+app.get('/index.html', (req, res) => {
+    res.redirect('/currentTrack/:' + req.params.access_token);
+});
+
 /**
  * 
  */
-app.get('/userAlbums/:access_token', (req,res) => {
-    console.log(' **** Obtener album ****');
+ app.get('/currentTrack/:access_token', (req,res) => {
+    console.log('obtener current song');
+    
     let spotifyAccessToken = req.params.access_token.substring(1);
+    
     const opcionesUserInfo = {
-        url: 'https://api.spotify.com/v1/me/albums',
+        url: 'https://api.spotify.com/v1/me/player',
         headers: { 'Authorization': 'Bearer ' + spotifyAccessToken},
         json: true
     }
@@ -121,20 +148,20 @@ app.get('/userAlbums/:access_token', (req,res) => {
     request.get(opcionesUserInfo, (error, response, body) => {
         if(error){
             console.log(error);
+            res.send(error);
         } else {
-            console.log(response.statusCode);
-            console.log(body);
-            console.log(body.items[0].album);
+            res.redirect('index.html');
         }
     })
 });
-
 /**
  * 
  */
  app.get('/anterior/:access_token', (req,res) => {
     console.log(' **** Cambiar anterior cancion ****');
+    
     let spotifyAccessToken = req.params.access_token.substring(1);
+    
     const opcionesUserInfo = {
         url: 'https://api.spotify.com/v1/me/player/previous',
         headers: { 'Authorization': 'Bearer ' + spotifyAccessToken},
@@ -144,9 +171,9 @@ app.get('/userAlbums/:access_token', (req,res) => {
     request.post(opcionesUserInfo, (error, response, body) => {
         if(error){
             console.log(error);
+            res.send(error);
         } else {
-            console.log(response.statusCode);
-            console.log(body);
+            res.redirect()
         }
     })
 });

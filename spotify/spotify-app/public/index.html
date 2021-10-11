@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Spotify</title>
+    
+    <style>
+        header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-right: 50px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>App Spotify</h1>
+        <div>
+            <a href="http://localhost:3000/login">Login</a>
+            <span style="font-weight: bold;">Server:</span><span id="serverStatus"></span>
+        </div>
+    </header>
+    <div class="main">
+        <p id="current"></p>
+        <a href="" id="prev">Anterior</a>
+        <a href="" id="pause">pausa</a>
+        <a href="" id="play">play</a>
+        <a href="" id="next">Siguiente</a>
+    </div>    
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="scripts/app.js"></script>
+    <script>
+        let parametros = getHashParams(window.location.hash);
+        let accessToken = parametros.access_token || null;
+        let refreshToken = parametros.refresh_token || null;
+
+        if(accessToken !== null && refreshToken !== null){
+            $('#serverStatus').text('ON');
+            $('#serverStatus').css('color', '#00FF00');
+        }else {
+            $('#serverStatus').text('OFF');
+            $('#serverStatus').css('color', 'red');
+        }
+    </script>
+</body>
+</html>
