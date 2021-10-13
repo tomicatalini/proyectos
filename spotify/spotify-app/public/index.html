@@ -5,46 +5,139 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App Spotify</title>
-    
-    <style>
-        header{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-right: 50px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/master.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 </head>
 <body>
     <header>
-        <h1>App Spotify</h1>
+        <h1>
+            <img src="images/icons/01_RGB/02_PNG/Spotify_Icon_RGB_White.png" alt="Spotify" id="logo">
+            App Spotify
+        </h1>
         <div>
-            <a href="http://localhost:3000/login">Login</a>
+            <a href="http://localhost:3000/login" class="btn">Login</a>
             <span style="font-weight: bold;">Server:</span><span id="serverStatus"></span>
         </div>
     </header>
     <div class="main">
-        <p id="current"></p>
-        <a href="" id="prev">Anterior</a>
-        <a href="" id="pause">pausa</a>
-        <a href="" id="play">play</a>
-        <a href="" id="next">Siguiente</a>
-    </div>    
+        <img alt="" id="songImg">        
+    </div>
+    <div id="reproductor">
+        <div id="actual" class="repAlgo">
+            <p id="nombre">Olvidala</p>
+            <p id="artista">Los palmeras</p>
+        </div>
+        <div id="botones">
+            <button id="previous">anterior</button>
+            <!-- <a href="http://localhost:3000/change/:previous" id="change/:previous" class="botones-icon"> -->
+                <span class="material-icons-outlined">skip_previous</span>
+            </a>
+            <a href="http://localhost:3000/active/:pause" id="pause" class="botones-icon">
+                <span class="material-icons-outlined">pause</span>
+            </a>
+            <a href="http://localhost:3000/active/:play" id="play" class="botones-icon">
+                <span class="material-icons-outlined">play_arrow</span>
+            </a>
+            <a href="http://localhost:3000/change/:next" id="next" class="botones-icon">
+                <span class="material-icons-outlined">skip_next</span>
+            </a>
+        </div>
+        <div class="repAlgo"></div>
+    </div>     
 
+</body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="scripts/app.js"></script>
     <script>
         let parametros = getHashParams(window.location.hash);
-        let accessToken = parametros.access_token || null;
-        let refreshToken = parametros.refresh_token || null;
+        let server_status = parametros.server_status || null;
+        $('#pause').hide();
 
-        if(accessToken !== null && refreshToken !== null){
-            $('#serverStatus').text('ON');
-            $('#serverStatus').css('color', '#00FF00');
-        }else {
+        if(server_status === 'ERROR'){
             $('#serverStatus').text('OFF');
             $('#serverStatus').css('color', 'red');
+        } else if(server_status === 'OK'){
+            $('#serverStatus').text('ON');
+            $('#serverStatus').css('color', '#00FF00');
+            $('#previous').click(
+                () => {
+                    fetch('http://localhost:3000/change/:previous')
+                        .then(() => {actualizarReproductor()});
+                }
+            );
+            
+            let url = 'http://localhost:3000/currentTrack';
+            let response = 
+                fetch(url)
+                    .then( response => {
+                        console.log(response);
+                        return response.json()})
+                    .then( data => {
+                        if(data){
+                            console.log(data);
+                            if(data.is_playing){
+                                $('#play').hide();
+                                $('#pause').show();
+                            } else {
+                                $('#pause').hide();
+                                $('#play').show();
+                            }   
+                            $('#artista').text(artistas(data.item.artists));
+                            $('#nombre').text(data.item.name);
+                            $('#songImg').attr('src',data.item.album.images[0].url);
+                        } else {
+                            $('#nombre').text('Ningun dispositivo escuchando');
+                            $('#artista').text('');
+                        }
+                    });
+            
+            (async function(){
+                let playlist_id = await fetch('http://localhost:3000/me/playlists').then( res => res.json()).then( data => {
+                    console.log(data);
+                    return data.items[1].id;
+                });   
+                
+                console.log(playlist_id);
+                
+                fetch('http://localhost:3000/playlist/:' + playlist_id).then( res => res.json()).then( data => console.log(data));
+            })();
+            
+            fetch('http://localhost:3000/other/playlists/:' + 'caroperazzolo').then( res => res.json()).then( data => console.log(data));
+            fetch('http://localhost:3000/other/profile/:' + 'caroperazzolo').then( res => res.json()).then( data => console.log(data));
+            
+
+            
         }
+        
+        function artistas(arrayArtists){
+            let artistas = "";
+            for (const artist of arrayArtists) {
+                artistas += artist.name + ", ";
+            }
+            return artistas.substring(0, artistas.length-2);
+        }
+
+        async function actualizarReproductor(){
+            let url = 'http://localhost:3000/currentTrack';
+            let response = await fetch(url)
+                                .then(response => {
+                                    console.log(response);
+                                    return response.json()})
+                                .then(data => {
+                                    console.log(data);
+                                    if(data.is_playing){
+                                        $('#play').hide();
+                                        $('#pause').show();
+                                    } else {
+                                        $('#pause').hide();
+                                        $('#play').show();
+                                    }   
+                                    $('#artista').text(artistas(data.item.artists));
+                                    $('#nombre').text(data.item.name);
+                                    $('#songImg').attr('src',data.item.album.images[0].url);
+                                });
+        }
+        
     </script>
-</body>
 </html>
