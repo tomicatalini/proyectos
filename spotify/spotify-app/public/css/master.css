@@ -19,14 +19,21 @@ body {
     background-color: #444444;
     position: relative;
 }
+/*HEADER*/
 header {
+    width: calc(100% - 40%);
     display: flex;
     height: 80px;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
     border-bottom: 1px solid white;
+    background-color: rgba(152,245,052,.3);
+    position: sticky;
+    top: 0;
+    left: 20%;
 }
+
 #user {
     display: flex;
     justify-content: center;
@@ -73,13 +80,42 @@ header {
     border-color: #1db954;
     color: white;
 }
-.main {
-    width: 100%;
-    height: calc(100% - 80px);
+
+/*ASIDE*/
+.aside{
+    width: 20%;
+    height: 100%;
+    background-color: black;
 }
-.centro {
+#aside-izq{
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+#aside-der{
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+
+/*MAIN*/
+.main {
+    width: calc(100% - 40%);
+    /* height: calc(100% - 80px); */
+    height: 300px;
+    position: absolute;
+    top: 0;
+    left: 20%;
+    padding: 70px 0 150px;
+    z-index: -1;
+}
+#centro {
     width: 100%;
     height: calc(100% - 100px);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 40px;
 }
 h1 {
     color: white;
@@ -91,13 +127,18 @@ h1 {
     height: auto;
     margin-right: 10px;
 }
+
+/*REPRODUCTOR*/
 #reproductor {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 100px;
-    border-top: 1px solid white;
+    height: 80px;
+    background-color: #222;
+    position: fixed;
+    bottom: 0;
+    left: 0;
 }
 .repAlgo {
     width: 40%;
@@ -142,30 +183,42 @@ h1 {
 
 /*PLAyLIST*/
 .playlist {
-    width: 180px;
-    height: 200px;
-    border: 2px solid white;
+    width: 350px;
+    height: 100px;
+    background-color: rgba(110,110,110,.8);
+    border-radius: 5px;
+    box-shadow: 0 5px 20px 1px black;
     display: flex;
-    flex-flow: column;
+    margin-bottom: 20px;
+    overflow: hidden;
 }
 .playlist img {
-    width: 100%;
-    height: 120px;
+    width: 100px;
+    height: 100%;
     background-color: #1db954;
 }
 .playlist .data {
-    width: 100%;
-    height: 80px;
-    display: flex;
-    flex-flow: column;
-    justify-content: space-between;
+    width: calc(100% - 100px);
+    height: 100%;
 }
+
 .playlist .data-header{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 70px;
+    padding: 2px 10px;
+    color: white;
 }
 .playlist .name {
-   font-size: 16px;
+    font-size: 16px;
 }
 .playlist .data-footer{
+    height: calc(100% - 70px);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 5px;
 }
 .playlist .cantidad {
     font-size: 13px;
