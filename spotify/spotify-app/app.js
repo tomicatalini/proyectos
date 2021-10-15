@@ -3,7 +3,7 @@ const request = require('request');
 const cors = require('cors');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
-const { query } = require('express');
+// const { query } = require('express');
 
 const app = express();
 //SETTINGS
@@ -22,21 +22,22 @@ const redirect_uri = 'http://localhost:3000/callback';
 let state_key = 'spotifyAuthState';
 
 //ROUTS
-app.get('/', () => {
-    res.redirect('/public/index.html');
+app.get('/', (req, res) => {
+    console.log('raiz');   
 });
 
 app.get('/index.html', (req, res) => {
-    if(app.locals.access_token && app.locals.refresh_token){
-        
-    }
+    console('/index.html');
 });
 
 app.get('/login', (req, res) => {
+    console.log('/login');
+
     let scopes = 'user-read-private user-read-email ' //user info
                         + 'user-read-playback-state user-modify-playback-state user-read-currently-playing ' //Spotify Conect
                         + 'playlist-read-private playlist-read-collaborative';
     let state = generateRandomString(16);
+    
     res.cookie(state_key, state);
 
     let params = {
@@ -53,8 +54,8 @@ app.get('/login', (req, res) => {
 /*
  * 
  */
-app.get('/callback', (req, res) => {
-
+app.get('/callback', (req, res) => {    
+    console.log('/callback');
     let code = req.query.code || null;
     let state = req.query.state || null;
     let stored_state = req.cookies ? req.cookies[state_key] : null;
@@ -80,18 +81,42 @@ app.get('/callback', (req, res) => {
 
         request.post(reqInfo, (error, response, body) => {
             const data = {}
-            if(error){
-                console.log('Se pudrio la momia: ', error);
-                data.server_status = 'ERROR';
-            } else {                
-                data.server_status = 'OK';
-
+            if(!error && response.statusCode){
                 app.locals.access_token = body.access_token;
                 app.locals.refresh_token = body.refresh_token;
+                
+                data.status = response.statusCode;                
+            } else {                
+                console.log('Se pudrio la momia: ', error);
+                data.server_status = 'ERROR';
+                console.log(error);
             }
+
             res.redirect('http://localhost:3000/index.html#' + querystring.stringify(data));
         });        
     } 
+});
+
+app.get('/me/profile', (req, res) => {
+    console.log('/me/profile');
+    let access_token = app.locals.access_token;
+    const opciones = {
+        url: 'https://api.spotify.com/v1/me',
+        headers: {
+            'authorization': 'Bearer ' + access_token,
+            'content-type': 'application/json'
+        },
+        json: true
+    }
+
+    request.get(opciones, (error, response, body) => {
+        if(!error && response.statusCode){
+            res.json(body);
+        } else {
+            console.log(response.statusCode);
+            console.log(error);
+        }
+    });
 });
 
 app.get('/me/playlists', (req, res) => {
@@ -306,6 +331,36 @@ app.get('/active/:accion', (req,res) => {
     })
 });
 
+app.get('/refresh/:caller', (req, res) => {
+    console.log('/refresh');
+    let caller = req.params.caller.substring(1);
+    const ops = {
+        url: 'https://accounts.spotify.com/api/token',
+        form: {
+            grant_type: 'refresh_token',
+            refresh_token: app.locals.refresh_token
+        },
+        headers: {
+            'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+        },
+        json: true
+    };
+
+    request.post(ops, (error, response, body) => {
+        if(!error && response.statusCode === 200){
+            if(body.access_token){
+                app.locals.access_token = body.access_token;
+            } else {
+                console.log('No hay access_token nuevo');
+            }
+        } else {
+            console.log(response.statusCode);
+            console.log(error);
+        }
+    });
+
+    res.redirect('http://localhost:3000/' + caller);
+});
 
 console.log(`Server activo en el puerto ${app.get('port')}`);
 app.listen(app.get('port'));
