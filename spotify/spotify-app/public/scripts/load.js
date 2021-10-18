@@ -14,7 +14,36 @@ if(server_status){
                 } else {
                     console.log('No hay datos del usuario');
                 }
-            })
+            });
+
+        if($('#aside-der').attr('hidden') == 'hidden'){
+            $('header').css('width', 'calc(100% - 20%)');
+        }
+
+        $('#other #user-name').hide();
+        $('#playlist-other').focus( () => {
+            $('#other #user-name').show("slow");
+        });
+        $('#playlist-other').blur( function(){
+            if(!this.classList.contains("onfocus")){
+                $('#other #user-name').hide("slow");                
+            }
+        });
+
+        let items = document.querySelectorAll('.menu-item');
+        console.log(items);
+        for (let btn of items) {
+            btn.addEventListener('click', () => {
+                let items = document.querySelectorAll('.menu-item');
+                for(let btn of items){
+                    btn.classList.toggle("onfocus", false);
+                }
+                if(btn.getAttribute('id') != 'playlist-other'){
+                    $('#other #user-name').hide("slow");
+                }
+                btn.classList.add("onfocus");
+            });
+        }
     }
 } else {
     console.log('No hubo respuesta del servidor');
