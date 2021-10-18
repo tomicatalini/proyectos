@@ -170,7 +170,8 @@ app.get('/playlist/:playlist_id', (req, res) => {
 app.get('/other/playlists/:user_id', (req, res) => {
     console.log('/other/playlists');
     let access_token = app.locals.access_token;
-    let user_id = req.params.user_id.substring(1);
+    let user_id = req.params.user_id;
+    console.log(user_id);
     const opciones = {
         url: `https://api.spotify.com/v1/users/${user_id}/playlists`,
         headers: {
