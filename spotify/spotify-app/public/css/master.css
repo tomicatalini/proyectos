@@ -120,29 +120,73 @@ h1 {
     padding: 40px 10px 20px;
 }
 #aside-der{
+    width: 35%;
     position: fixed;
     top: 0;
     right: 0;
+    padding: 20px;
+    overflow: scroll;
 }
-
+/*CANCIONES*/
+.song {
+    width: 100%;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    color: white;
+}
+.song .img {
+    width: 35px;
+    height: 35px;
+    margin-right: 10px;
+}
+.song .img img {
+    width: 35px;
+    height: auto;
+}
+.song .data {
+    flex-grow: 1;
+    display: flex;
+    flex-flow: column;
+    font-size: 12px;
+    margin-right: 10px;
+}
+.song .data .name {
+    font-weight: 500;
+}
+.song .data .artists {
+    font-weight: 300;
+}
+.song .acciones {
+    height: 35px;
+    outline: 1px solid blueviolet;
+}
 /*MAIN*/
 .main {
-    width: calc(100% - 40%);
-    /* height: calc(100% - 80px); */
-    height: 300px;
-    position: absolute;
+    /* width: calc(100% - 40%); */
+    height: calc(100% - 80px);
+    /* position: absolute;
     top: 0;
-    left: 20%;
+    left: 20%; */
     padding: 70px 0 150px;
+    padding-left: calc(20% + 50px);
+    padding-right: calc(20% + 50px);
+    overflow: scroll;
     z-index: -1;
 }
 #centro {
     width: 100%;
-    height: calc(100% - 100px);
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
     padding: 40px;
+}
+.centro-wrap{
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+}
+footer{
+    width: 100%;
+    height: 50px;
 }
 
 /*REPRODUCTOR*/
@@ -198,16 +242,20 @@ h1 {
 .material-icons.md-36 { font-size: 36px; }
 .material-icons.md-48 { font-size: 48px; }
 
-/*PLAyLIST*/
+/*PLAYLIST*/
 .playlist {
-    width: 350px;
+    width: 400px;
     height: 100px;
     background-color: rgba(110,110,110,.8);
     border-radius: 5px;
     box-shadow: 0 5px 20px 1px black;
     display: flex;
+    margin-right: 40px;
     margin-bottom: 20px;
     overflow: hidden;
+}
+.playlist:hover{
+    cursor: pointer;
 }
 .playlist img {
     width: 100px;

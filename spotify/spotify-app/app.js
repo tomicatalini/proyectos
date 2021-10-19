@@ -142,10 +142,34 @@ app.get('/me/playlists', (req, res) => {
     });
 });
 
+app.get('/me/devices', (req, res) => {
+    console.log('/me/player/devices');
+    let access_token = app.locals.access_token;
+    const opciones = {
+        url: 'https://api.spotify.com/v1/me/player/devices',
+        headers : {
+            'authorization': 'Bearer ' + access_token,
+            'content-type': 'application/json'
+        },
+        json: true
+    };
+
+    request.get(opciones, (error, response, body) => {
+        if(!error && response.statusCode === 200){
+            console.log(body);
+            res.json(body);
+        } else {
+            console.log(response.statusCode);
+            console.log(error);
+            res.send(error);
+        }
+    });
+});
+
 app.get('/playlist/:playlist_id', (req, res) => {
     console.log('/playlist');
     let access_token = app.locals.access_token;
-    let playlist_id = req.params.playlist_id.substring(1);
+    let playlist_id = req.params.playlist_id;
     const opciones = {
         url: 'https://api.spotify.com/v1/playlists/' + playlist_id,
         headers: {
@@ -214,12 +238,15 @@ app.get('/other/profile/:user_id', (req, res) => {
     })
 });
 
+// app.get('/tracks/:id-playlist', (req, res) => {
+
+// });
 
 /**
  * 
  */
- app.get('/currentTrack', (req,res) => {
-    console.log('currenttrak');    
+ app.get('/currentTrack/currently-playing', (req,res) => {
+    console.log('/currentTrak/currently-playing');    
     if(req.method === 'GET'){        
         let access_token = app.locals.access_token;
         const queryData = {};
@@ -251,37 +278,65 @@ app.get('/other/profile/:user_id', (req, res) => {
         console.log('No se realizo la peticion con el METODO correspondiente');
     }
 });
-//  app.get('/currentTrack', (req,res) => {
-//     console.log('currenttrak');    
-//     if(req.method === 'GET'){        
-//         let access_token = app.locals.access_token;
-//         if(access_token){            
-//             const opciones = {
-//                 url: 'https://api.spotify.com/v1/me/player',
-//                 headers: { 
-//                     'Authorization': 'Bearer ' + access_token,
-//                     'Content-Type': 'application/json'
-//                 },
-//                 json: true
-//             }
+ app.get('/currentTrack', (req,res) => {
+    console.log('currenttrak');    
+    if(req.method === 'GET'){        
+        let access_token = app.locals.access_token;
+        if(access_token){            
+            const opciones = {
+                url: 'https://api.spotify.com/v1/me/player',
+                headers: { 
+                    'Authorization': 'Bearer ' + access_token,
+                    'Content-Type': 'application/json'
+                },
+                json: true
+            }
             
-//             request.get(opciones, (error, response, body) => {
-//                 if(!error && response.statusCode === 200){                    
-//                     res.json(body);
-//                 } else if(!error && response.statusCode === 204) {
-//                     console.log('NO HAY DISPOSITIVOS ESCUCHANDO');
-//                 } else {
-//                     console.log(response.statusCode);
-//                     console.log(error);                    
-//                 }
-//             });            
-//         } else {
-//             console.log('No funciona el resfrescameElToken che');
-//         }
-//     } else {
-//         console.log('No se realizo la peticion con el METODO correspondiente');
-//     }
-// });
+            request.get(opciones, (error, response, body) => {
+                if(!error && response.statusCode === 200){                    
+                    res.json(body);
+                } else if(!error && response.statusCode === 204) {
+                    console.log('NO HAY DISPOSITIVOS ESCUCHANDO');
+                } else {
+                    console.log(response.statusCode);
+                    console.log(error);                    
+                }
+            });            
+        } else {
+            console.log('No funciona el resfrescameElToken che');
+        }
+    } else {
+        console.log('No se realizo la peticion con el METODO correspondiente');
+    }
+});
+
+app.get('/me/currentTrack/recently-played', (req, red) => {
+    console.log('/me/currentTrack/recently-played');
+    let access_token = app.locals.access_token;
+        if(access_token){            
+            const opciones = {
+                url: 'https://api.spotify.com/v1/me/player/recently-played',
+                headers: {
+                    'Accept': 'application/json', 
+                    'Authorization': 'Bearer ' + access_token,
+                    'Content-Type': 'application/json'
+                },
+                json: true
+            }
+            
+            request.get(opciones, (error, response, body) => {
+                if(!error && response.statusCode === 200){                    
+                    console.log(body);
+                    res.json(body);
+                } else if(!error && response.statusCode === 204) {
+                    console.log('NO HAY DISPOSITIVOS ESCUCHANDO');
+                } else {
+                    console.log(response.statusCode);
+                    console.log(error);                    
+                }
+            });
+        }
+});
 
 /**
  * 

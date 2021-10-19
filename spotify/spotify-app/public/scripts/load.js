@@ -8,6 +8,10 @@ if(server_status){
     if(server_status !== '200') {
         console.log('NO FUNCIONA EL SERVER BRO');
     } else {
+        //fetch('http://localhost:3000/me/devices');
+        //fetch('http://localhost:3000/currentTrack/currently-playing');
+        //fetch('http://localhost:3000/currentTrack');
+        fetch('http://localhost:3000/me/currentTrack/recently-played');
         solicitar('http://localhost:3000/me/profile')
             .then(data => {                
                 if(data){
