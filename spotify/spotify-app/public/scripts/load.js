@@ -1,27 +1,81 @@
-// import $ from "jquery";
-
 let parametros = getHashParams(window.location.hash);
 let server_status = parametros.status || null;
 
 if(server_status){
-    console.log(server_status);
     if(server_status !== '200') {
         console.log('NO FUNCIONA EL SERVER BRO');
     } else {
-        //fetch('http://localhost:3000/me/devices');
-        //fetch('http://localhost:3000/currentTrack/currently-playing');
-        //fetch('http://localhost:3000/currentTrack');
-        fetch('http://localhost:3000/me/currentTrack/recently-played');
+        const aside_der_tracks = document.querySelector('#aside-der #tracks-wrap');
+
+        if(aside_der_tracks.children.length == 0){
+            document.getElementById('aside-der').setAttribute('hidden','hidden');
+            document.getElementById('header').style.width = 'calc(100% - 15%)';
+        }
+        
         solicitar('http://localhost:3000/me/profile')
             .then(data => {                
                 if(data){
-                    console.log(data);
                     $('#user-name').text(data.id);
                 } else {
                     console.log('No hay datos del usuario');
                 }
             });
+        
+        solicitar('http://localhost:3000/me/devices')
+            .then( data => {
+                console.log(data);
+                const devicesDiv = document.getElementById('devices');
 
+                for(let device of data.devices){
+                    let idHidden = document.createElement('SPAN');
+                    let activeHidden = document.createElement('SPAN');
+                    let name = document.createElement('P');
+                    let type = document.createElement('P');
+                    const deviceDiv = document.createElement('DIV');
+
+                    idHidden.setAttribute('hidden','hidden');
+                    activeHidden.setAttribute('hidden','hidden');                    
+                    deviceDiv.setAttribute('id','device');
+
+                    idHidden.textContent = device.id;
+                    activeHidden.textContent = device.is_active;
+                    name.textContent = device.name;
+                    type.textContent = device.type;
+
+                    deviceDiv.appendChild(idHidden);
+                    deviceDiv.appendChild(activeHidden);
+                    deviceDiv.appendChild(name);
+                    deviceDiv.appendChild(type);
+
+                    devicesDiv.appendChild(deviceDiv);
+                }
+            });        
+    
+        //Cargar REPRODUCTOR con datos de la ultima canción que se escuchó.
+        solicitar('http://localhost:3000/me/currentTrack/recently-played')
+        .then( data => {
+            if(data.error){
+                console.log(`${data.status}: ${data.message}`);
+            } else {
+                const recentlyTrackName = document.querySelector('#actual #nombre');
+                const recentlyTrackArtist = document.querySelector('#actual #artista');
+                const currentImg = document.querySelector('#actual #currentImg');
+
+                recentlyTrackName.textContent = data.items[0].track.name;
+                recentlyTrackArtist.textContent = "";
+                let artistas = data.items[0].track.artists.length;
+                for (let i = 0; i < artistas; i++) {
+                    if(i == (artistas - 1)){
+                        recentlyTrackArtist.textContent += data.items[0].track.artists[i].name;
+                    } else {
+                        recentlyTrackArtist.textContent += `${data.items[0].track.artists[i].name}, `;
+                    }                        
+                }
+
+                currentImg.setAttribute('src', data.items[0].track.album.images[2].url);
+            }
+        });
+        
         if($('#aside-der').attr('hidden') == 'hidden'){
             $('header').css('width', 'calc(100% - 20%)');
         }
@@ -38,66 +92,7 @@ if(server_status){
             }
         });
 
-        // $('#other #user-name').keypress( (evt) => {
-        //     if(evt.key == 'Enter'){
-        //         let user = evt.target.value ? evt.target.value : "no cargo nada";
-        //         solicitar('http://localhost:3000/other/playlists/' + user)
-        //             .then(data => {                
-        //                 if(data){
-        //                     const divCentro = document.getElementById("centro");        
-        //                     const divCentroWrap = document.createElement('div');
-        //                     divCentroWrap.classList.add('centro-wrap');        
-                            
-        //                     for (const playlist of data.items) {
-        //                         console.log(playlist);
-                                
-        //                         let article = document.createElement("ARTICLE");
-        //                         let imgPlaylist = document.createElement("IMG");
-        //                         let divData = document.createElement('DIV');
-        //                         let divDataHeader = document.createElement('DIV');
-        //                         let name = document.createElement('H3');
-        //                         let divDataFooter = document.createElement('DIV');
-        //                         let spanCantidad = document.createElement('SPAN');
-        //                         let spanColaborativo = document.createElement('SPAN');
-
-        //                         article.classList.add('playlist');
-        //                         imgPlaylist.setAttribute('src', playlist.images[0].url);
-        //                         divData.classList.add('data');
-        //                         divDataHeader.classList.add('data-header');
-        //                         name.classList.add('name');
-        //                         name.innerHTML = playlist.name;
-        //                         divDataFooter.classList.add('data-footer');
-        //                         spanCantidad.classList.add('cantidad');
-        //                         spanCantidad.innerHTML = `(${playlist.tracks.total})`;
-                                
-        //                         if(!playlist.collaborative){
-        //                             spanColaborativo.hidden = true;
-        //                         } else {
-        //                             spanColaborativo.classList.add('material-icons-outlined')
-        //                             spanColaborativo.innerHTML = 'people';
-        //                         }
-
-        //                         article.appendChild(imgPlaylist);
-        //                         divDataHeader.appendChild(name);
-        //                         divData.appendChild(divDataHeader);            
-        //                         divDataFooter.appendChild(spanCantidad);            
-        //                         divDataFooter.appendChild(spanColaborativo);            
-        //                         divData.appendChild(divDataFooter);
-        //                         article.appendChild(divData);
-                                
-        //                         divCentroWrap.appendChild(article);
-        //                     }
-        //                     divCentro.appendChild(divCentroWrap);
-        //                 } else {
-        //                     console.log('No hay datos del usuario');
-        //                 }
-        //             });
-        //     }
-        // });
-
-
         let items = document.querySelectorAll('.menu-item');
-        console.log(items);
         for (let btn of items) {
             btn.addEventListener('click', () => {
                 let items = document.querySelectorAll('.menu-item');

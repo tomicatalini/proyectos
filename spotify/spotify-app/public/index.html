@@ -12,7 +12,7 @@
     </head>    
     <body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <header>
+    <header id="header">
         <h1>
             <a href="http://localhost:3000/login">
                 <img src="images/icons/01_RGB/02_PNG/Spotify_Icon_RGB_White.png" alt="Spotify" id="logo">
@@ -33,21 +33,17 @@
                 <input type="text" id="user-name" placeholder="Nombre de usuario">
             </div>
         </nav>
+        <div id="devices">
+            <span>Dispositivos</span>
+        </div>
     </aside>
     <aside id="aside-der" class="aside">
         <div id="header">
-            <h2>TOP 50</h2>
+            <h2></h2>
         </div>
-        <div class="tracks" id="tracks">
-            <div class="song">
-                <div class="img"></div>
-                <div class="data">
-                    <span class="name">Turraka - Remix</span>
-                    <span class="artists">kaleb Di Masi, Ecko, Papichamp</span>
-                </div>
-                <div class="acciones"></div>
-            </div>
+        <div class="tracks" id="tracks-wrap">
         </div>
+        <footer></footer>
     </aside>
     <script src="scripts/load.js"></script>
     <div class="main">
@@ -56,23 +52,17 @@
     </div>
     <div id="reproductor">
         <div id="actual" class="repAlgo">
-            <p id="nombre">Olvidala</p>
-            <p id="artista">Los palmeras</p>
+            <img src="" alt="" id="currentImg">
+            <div>
+                <p id="nombre">Olvidala</p>
+                <p id="artista">Los palmeras</p>
+            </div>
         </div>
         <div id="botones">
-            <button id="previous">anterior</button>
-            <!-- <a href="http://localhost:3000/change/:previous" id="change/:previous" class="botones-icon"> -->
-                <span class="material-icons-outlined">skip_previous</span>
-            </a>
-            <a href="http://localhost:3000/active/:pause" id="pause" class="botones-icon">
-                <span class="material-icons-outlined">pause</span>
-            </a>
-            <a href="http://localhost:3000/active/:play" id="play" class="botones-icon">
-                <span class="material-icons-outlined">play_arrow</span>
-            </a>
-            <a href="http://localhost:3000/change/:next" id="next" class="botones-icon">
-                <span class="material-icons-outlined">skip_next</span>
-            </a>
+            <button id="previous" class="btn-rep"><span class="material-icons-outlined">skip_previous</span></button>
+            <button id="play-pause"><span class="material-icons-outlined">pause</span></button>
+            <!-- <button id="previous"><span class="material-icons-outlined">play_arrow</span></button> -->
+            <button id="next" class="btn-rep"><span class="material-icons-outlined">skip_next</span></button>
         </div>
         <div class="repAlgo"></div>
     </div>    
@@ -82,95 +72,4 @@
     <script src="scripts/mackup.js"></script>
     <script>
     </script>
-    <!-- <script>
-        let parametros = getHashParams(window.location.hash);
-        let server_status = parametros.server_status || null;
-        $('#pause').hide();
-
-        if(server_status === 'ERROR'){
-            $('#serverStatus').text('OFF');
-            $('#serverStatus').css('color', 'red');
-        } else if(server_status === 'OK'){
-            $('#serverStatus').text('ON');
-            $('#serverStatus').css('color', '#00FF00');
-            $('#previous').click(
-                () => {
-                    fetch('http://localhost:3000/change/:previous')
-                        .then(() => {actualizarReproductor()});
-                }
-            );
-            
-            let url = 'http://localhost:3000/currentTrack';
-            let response = 
-                fetch(url)
-                    .then( response => {
-                        console.log(response);
-                        return response.json()})
-                    .then( data => {
-                        if(data){
-                            console.log(data);
-                            if(data.is_playing){
-                                $('#play').hide();
-                                $('#pause').show();
-                            } else {
-                                $('#pause').hide();
-                                $('#play').show();
-                            }   
-                            $('#artista').text(artistas(data.item.artists));
-                            $('#nombre').text(data.item.name);
-                            $('#songImg').attr('src',data.item.album.images[0].url);
-                        } else {
-                            $('#nombre').text('Ningun dispositivo escuchando');
-                            $('#artista').text('');
-                        }
-                    });
-            
-            (async function(){
-                let playlist_id = await fetch('http://localhost:3000/me/playlists').then( res => res.json()).then( data => {
-                    console.log(data);
-                    return data.items[1].id;
-                });   
-                
-                console.log(playlist_id);
-                
-                fetch('http://localhost:3000/playlist/:' + playlist_id).then( res => res.json()).then( data => console.log(data));
-            })();
-            
-            fetch('http://localhost:3000/other/playlists/:' + 'caroperazzolo').then( res => res.json()).then( data => console.log(data));
-            fetch('http://localhost:3000/other/profile/:' + 'caroperazzolo').then( res => res.json()).then( data => console.log(data));
-            
-
-            
-        }
-        
-        function artistas(arrayArtists){
-            let artistas = "";
-            for (const artist of arrayArtists) {
-                artistas += artist.name + ", ";
-            }
-            return artistas.substring(0, artistas.length-2);
-        }
-
-        async function actualizarReproductor(){
-            let url = 'http://localhost:3000/currentTrack';
-            let response = await fetch(url)
-                                .then(response => {
-                                    console.log(response);
-                                    return response.json()})
-                                .then(data => {
-                                    console.log(data);
-                                    if(data.is_playing){
-                                        $('#play').hide();
-                                        $('#pause').show();
-                                    } else {
-                                        $('#pause').hide();
-                                        $('#play').show();
-                                    }   
-                                    $('#artista').text(artistas(data.item.artists));
-                                    $('#nombre').text(data.item.name);
-                                    $('#songImg').attr('src',data.item.album.images[0].url);
-                                });
-        }
-        
-    </script> -->
 </html>

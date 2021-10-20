@@ -3,7 +3,6 @@ const request = require('request');
 const cors = require('cors');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
-// const { query } = require('express');
 
 const app = express();
 //SETTINGS
@@ -35,7 +34,8 @@ app.get('/login', (req, res) => {
 
     let scopes = 'user-read-private user-read-email ' //user info
                         + 'user-read-playback-state user-modify-playback-state user-read-currently-playing ' //Spotify Conect
-                        + 'playlist-read-private playlist-read-collaborative';
+                        + 'playlist-read-private playlist-read-collaborative ' //playlist
+                        + 'user-read-recently-played' //Listening History;
     let state = generateRandomString(16);
     
     res.cookie(state_key, state);
@@ -310,12 +310,15 @@ app.get('/other/profile/:user_id', (req, res) => {
     }
 });
 
-app.get('/me/currentTrack/recently-played', (req, red) => {
+app.get('/me/currentTrack/recently-played', (req, res) => {
     console.log('/me/currentTrack/recently-played');
     let access_token = app.locals.access_token;
-        if(access_token){            
+        if(access_token){
+            const queryData = {
+                'limit': 1
+            };            
             const opciones = {
-                url: 'https://api.spotify.com/v1/me/player/recently-played',
+                url: 'https://api.spotify.com/v1/me/player/recently-played?' + querystring.stringify(queryData),
                 headers: {
                     'Accept': 'application/json', 
                     'Authorization': 'Bearer ' + access_token,
@@ -326,16 +329,38 @@ app.get('/me/currentTrack/recently-played', (req, red) => {
             
             request.get(opciones, (error, response, body) => {
                 if(!error && response.statusCode === 200){                    
-                    console.log(body);
                     res.json(body);
-                } else if(!error && response.statusCode === 204) {
-                    console.log('NO HAY DISPOSITIVOS ESCUCHANDO');
                 } else {
-                    console.log(response.statusCode);
-                    console.log(error);                    
+                    console.log(body.status);
+                    console.log(body.message);
+                    res.json(body);                    
                 }
             });
         }
+});
+
+app.post('/me/add/queue', (req, res) => {
+    console.log('/me/add/queue');
+    let access_token = app.locals.access_token;
+    let track_uri = req.body.uri;
+    
+    const opciones = {
+        url: 'https://api.spotify.com/v1/me/player/queue?uri=' + track_uri,
+        headers: { 
+            'Authorization': 'Bearer ' + access_token,
+            'Content-Type': 'application/json'
+        },
+        json: true
+    }
+
+    request.post(opciones, (error, response, body) => {
+        if(!error && response.statusCode === 204){
+            console.log('Se agrego a la queue');
+        } else {
+            console.log('No se agrego un carajo a la queue');
+            console.log(body);
+        }
+    });
 });
 
 /**

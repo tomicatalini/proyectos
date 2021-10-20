@@ -1,7 +1,11 @@
-// const e = require("express");
-
 function solicitar(url){
     let resultado = fetch(url)
+                            .then(res => res.json());
+
+    return resultado;
+}
+function solicitarPOST(url, ops){
+    let resultado = fetch(url, ops)
                             .then(res => res.json());
 
     return resultado;
@@ -11,13 +15,23 @@ function setTracks(playlistId){
     console.log(playlistId);
     solicitar('/playlist/' + playlistId).then( data => {
         if(data){
-            const titulo = document.querySelector('#aside-der #header');
-            titulo.textContent = data.name;
+            const aside_der = document.getElementById('aside-der');
+            const tituloSelectedPlaylist = document.querySelector('#aside-der h2');
+            const tracksDiv = document.createElement('DIV');
+            const trackWrap = document.getElementById('tracks-wrap');
 
-            const tracksDiv = document.getElementById('tracks');
+            let tracksDivExistente = document.getElementById('tracks');
+
+            tracksDiv.setAttribute('id', 'tracks');            
+            tituloSelectedPlaylist.textContent = data.name;
 
             for (const track of data.tracks.items) {
                 console.log(track);
+                let trackUri = document.createElement('SPAN');
+                trackUri.setAttribute('hidden', 'hidden');
+                trackUri.classList.add('uriHidden');
+                trackUri.textContent = track.track.uri;
+
                 let img = document.createElement('IMG');
                 img.setAttribute('src', track.track.album.images[0].url);
                 let imgDiv = document.createElement('DIV');
@@ -39,9 +53,31 @@ function setTracks(playlistId){
                 dataDiv.classList.add('data');
                 dataDiv.appendChild(name);
                 dataDiv.appendChild(artists);
-
+                dataDiv.appendChild(trackUri);
+                
+                const agregarQueue = document.createElement('SPAN');
+                agregarQueue.classList.add('material-icons');
+                agregarQueue.textContent = 'add';
+                agregarQueue.onclick = function(evt){
+                    let uriSpan = evt.target.parentNode.parentNode.querySelector('.data .uriHidden');
+                    console.log(uriSpan.textContent);
+                    let postOps = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({'uri': uriSpan.textContent })                        
+                    }
+                    solicitarPOST('http://localhost:3000/me/add/queue', postOps)
+                        .then( data => {
+                            console.log(data);
+                        });
+                }
+                
                 let accionesDiv = document.createElement('DIV');
                 accionesDiv.classList.add('acciones');
+                accionesDiv.appendChild(agregarQueue);
+
 
                 let song = document.createElement('DIV');
                 song.classList.add('song');
@@ -50,6 +86,17 @@ function setTracks(playlistId){
                 song.appendChild(accionesDiv);
 
                 tracksDiv.appendChild(song);
+            }
+
+            if(tracksDivExistente){
+                trackWrap.replaceChild(tracksDiv,tracksDivExistente);
+            } else {
+                trackWrap.appendChild(tracksDiv);
+            }
+
+            if(aside_der.getAttribute('hidden') == 'hidden'){
+                aside_der.removeAttribute('hidden');
+                document.getElementById('header').style.width = 'calc(100% - 15% - 35%)';
             }
         }
     });
@@ -60,9 +107,7 @@ function armarPlaylist(data) {
     const divCentroWrap = document.createElement('div');
     divCentroWrap.classList.add('centro-wrap');
     
-    for (const playlist of data.items) {
-        console.log(playlist);
-        
+    for (const playlist of data.items) {        
         let article = document.createElement('ARTICLE');
         article.classList.add('playlist');
         
@@ -72,6 +117,7 @@ function armarPlaylist(data) {
         let playlistId = document.createElement('SPAN');
         playlistId.classList.add('playlist-id');
         playlistId.textContent = playlist.id;
+        playlistId.setAttribute('hidden', 'hidden');
 
         let data = document.createElement('DIV');
         data.classList.add('data');
@@ -108,7 +154,6 @@ function armarPlaylist(data) {
         data.appendChild(dataFooter);
         
         article.addEventListener('click', (evt) => {
-            // let playlistId = evt.target.getElementById('playlist-id').textContent;
             let elem = evt.target;
             while(!elem.classList.contains('playlist-id')){
                 if(elem.classList.contains('playlist')){
@@ -117,7 +162,7 @@ function armarPlaylist(data) {
                 }
                 elem = elem.parentNode;
             }
-
+            
             setTracks(elem.textContent);            
         },
         true);
@@ -126,7 +171,6 @@ function armarPlaylist(data) {
     }
     divCentro.appendChild(divCentroWrap);
 }
-
 
 $('#misPlaylist').click( () => {
 
