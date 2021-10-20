@@ -176,7 +176,8 @@ $('#misPlaylist').click( () => {
 
     solicitar('http://localhost:3000/me/playlists').then( data => {
         if(data){
-            armarPlaylist(data);
+            // armarPlaylist(data);
+            setPlaylistBar(data);
         } else {
             console.log('No hay datos del usuario');
         }
@@ -184,13 +185,30 @@ $('#misPlaylist').click( () => {
 
 });
 
+$('#misPlaylist').focus( () => {
+
+    solicitar('http://localhost:3000/me/playlists').then( data => {
+        if(data){
+            // armarPlaylist(data);
+            setPlaylistBar(data);
+        } else {
+            console.log('No hay datos del usuario');
+        }
+    });
+
+});
+
+$('#misPlaylist').focus();
+
+
 $('#other #user-name').keypress( (evt) => {
     if(evt.key == 'Enter'){
         let user = evt.target.value ? evt.target.value : "no cargo nada";
         solicitar('http://localhost:3000/other/playlists/' + user)
             .then(data => {                
                 if(data){
-                    armarPlaylist(data);
+                    // armarPlaylist(data);
+                    setPlaylistBar(data);
                 } else {
                     console.log('No hay datos del usuario');
                 }
@@ -198,4 +216,41 @@ $('#other #user-name').keypress( (evt) => {
     }
 });
 
+function setPlaylistBar(data){
+    const playlistsWrap = document.getElementById('playlist-bar-wrap');
+    const playlists = document.createElement('DIV');
+    playlists.setAttribute('id', 'playlists-bar');
+
+    for( let playlist of data.items){
+        let playlistDiv = document.createElement('DIV');
+        let id = document.createElement('SPAN');
+        let name = document.createElement('SPAN');
+        let collaborative = document.createElement('SPAN');
+
+        id.setAttribute('hidden','hidden');
+
+        playlistDiv.classList.add('playlist');
+        id.classList.add('id');
+        name.classList.add('name');
+        collaborative.classList.add('material-icons-outlined');
+        
+        id.textContent = playlist.id;
+        name.textContent = playlist.name;
+        
+        playlist.collaborative ? collaborative.textContent = 'people' : collaborative.setAttribute('hidden', 'hidden'); 
+        
+        playlistDiv.appendChild(id);
+        playlistDiv.appendChild(name);
+        playlistDiv.appendChild(collaborative);
+
+        playlists.appendChild(playlistDiv);
+    }
+
+    let playlistsViejo = playlistsWrap.querySelector('#playlists-bar');
+    if(playlistsViejo){
+        playlistsWrap.replaceChild(playlists, playlistsViejo);
+    } else{
+        playlistsWrap.appendChild(playlists);
+    } 
+}
 

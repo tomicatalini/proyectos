@@ -27,9 +27,9 @@ body {
 
 /*HEADER*/
 header {
-    width: calc(100% - 15% - 35%);
-    display: flex;
+    width: calc(100% - 15%);
     height: 80px;
+    display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
@@ -111,16 +111,17 @@ h1 {
 }
 
 /*ASIDE*/
-.aside{
-    width: 15%;
+.aside{    
     height: 100%;
     background-color: black;
 }
 #aside-izq{
+    width: 15%;
+    height: calc(100% - 80px);
     position: fixed;
     top: 0;
     left: 0;
-    padding: 40px 10px 20px;
+    padding: 20px 10px;
     color: white;
 }
 #aside-der{
@@ -133,19 +134,42 @@ h1 {
     overflow: scroll;
 }
 /*ASIDE IZQUIERDO*/
-#aside-izq #devices {
+#aside-izq nav {
+    height: 30%;
+}
+#aside-izq #playlist-bar-wrap {
+    height: 50%;
+}
+#aside-izq #devices-wrap {
     margin-top: 10px;
     padding: 10px;
     border-top: 1px solid #888; 
 }
-#aside-izq #device {
-    margin: 10px 0;
+#aside-izq #devices{
+    display: flex;
+    justify-content: flex-start;
+}
+#aside-izq .device {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 10px 10px 0;
+    color: rgba(255, 255, 255, .5);
+}
+#aside-izq .device .material-icons {
+    font-size: 32px;
+}
+#aside-izq .device .nombre {
+    text-align: center;
+    font-size: 12px;
 }
 /*ASIDE DERECHO*/
 #aside-der footer{
-    width: 100%;;
+    width: 100%;
     height: 100px;
 }
+
 /*CANCIONES*/
 .song {
     width: 100%;
@@ -194,14 +218,11 @@ h1 {
 }
 /*MAIN*/
 .main {
-    /* width: calc(100% - 40%); */
     height: calc(100% - 80px);
-    /* position: absolute;
-    top: 0;
-    left: 20%; */
-    padding: 70px 0 150px;
-    padding-left: calc(20% + 50px);
-    padding-right: calc(20% + 50px);
+    padding: 70px 0;
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(136,136,136,1) 20%, rgba(50,50,50,1) 100%);
+    /* padding-left: calc(20% + 50px);
+    padding-right: calc(20% + 50px); */
     overflow: scroll;
     z-index: -1;
 }
@@ -294,54 +315,25 @@ footer{
     height: auto;
 }
 
-.material-icons.md-18 { font-size: 18px; }
-.material-icons.md-24 { font-size: 24px; }
-.material-icons.md-36 { font-size: 36px; }
-.material-icons.md-48 { font-size: 48px; }
-
 /*PLAYLIST*/
+#playlist-bar-wrap {
+    border-top: 1px solid rgba(80,80,80,1);
+    overflow: scroll;
+}
 .playlist {
-    width: 400px;
-    height: 100px;
-    background-color: rgba(110,110,110,.8);
-    border-radius: 5px;
-    box-shadow: 0 5px 20px 1px black;
+    width: 100%;
     display: flex;
-    margin-right: 40px;
-    margin-bottom: 20px;
+    justify-content: space-between;
+    padding: 10px 20px;
+    color: rgba(255,255,255,.7);
     overflow: hidden;
 }
 .playlist:hover{
-    cursor: pointer;
-}
-.playlist img {
-    width: 100px;
-    height: 100%;
-    background-color: #1db954;
-}
-.playlist .data {
-    width: calc(100% - 100px);
-    height: 100%;
-}
-
-.playlist .data-header{
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    height: 70px;
-    padding: 2px 10px;
-    color: white;
+    color: rgba(255,255,255,1);
 }
 .playlist .name {
-    font-size: 16px;
+    font-size: 12px;
 }
-.playlist .data-footer{
-    height: calc(100% - 70px);
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 0 5px;
-}
-.playlist .cantidad {
-    font-size: 13px;
+.playlist .material-icons-outlined{
+    font-size: 20px;
 }

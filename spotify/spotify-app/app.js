@@ -156,12 +156,11 @@ app.get('/me/devices', (req, res) => {
 
     request.get(opciones, (error, response, body) => {
         if(!error && response.statusCode === 200){
-            console.log(body);
             res.json(body);
         } else {
             console.log(response.statusCode);
-            console.log(error);
-            res.send(error);
+            console.log(body);
+            res.send(body);
         }
     });
 });
@@ -245,7 +244,7 @@ app.get('/other/profile/:user_id', (req, res) => {
 /**
  * 
  */
- app.get('/currentTrack/currently-playing', (req,res) => {
+ app.get('/me/currentTrack/currently-playing', (req,res) => {
     console.log('/currentTrak/currently-playing');    
     if(req.method === 'GET'){        
         let access_token = app.locals.access_token;
@@ -278,8 +277,8 @@ app.get('/other/profile/:user_id', (req, res) => {
         console.log('No se realizo la peticion con el METODO correspondiente');
     }
 });
- app.get('/currentTrack', (req,res) => {
-    console.log('currenttrak');    
+ app.get('/me/currentTrack', (req,res) => {
+    console.log('/me/currentTrack');    
     if(req.method === 'GET'){        
         let access_token = app.locals.access_token;
         if(access_token){            

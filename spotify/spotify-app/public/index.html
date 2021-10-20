@@ -30,14 +30,31 @@
             <button class="menu-item" id="misPlaylist">Mis playlists</button>
             <div id="other">
                 <button class="menu-item" id="playlist-other">Playlists de</button>
-                <input type="text" id="user-name" placeholder="Nombre de usuario">
+                <input type="text" id="user-name" placeholder="Nombre de usuario" hidden>
             </div>
         </nav>
-        <div id="devices">
-            <span>Dispositivos</span>
+        <div id="playlist-bar-wrap">
+
+        </div>
+        <div id="devices-wrap">
+            <span class="tituo">Dispositivos</span>
+            <!-- <div id="devices">
+                <div class="device" onload="this.querySelector('.activo').textContent == 'true' ? this.style.color = 'rgba(255,255,255,1)' : false">
+                    <span class="id" hidden>id_dispositivo</span>
+                    <span class="activo" hidden>true</span>
+                    <span class="material-icons">computer</span>
+                    <span class="nombre">DESKTOP</span>
+                </div>
+                <div class="device">
+                    <span class="id" hidden>id_dispositivo</span>
+                    <span class="activo" hidden>false</span>
+                    <span class="material-icons">smartphone</span>
+                    <span class="nombre">A70</span>
+                </div>
+            </div> -->
         </div>
     </aside>
-    <aside id="aside-der" class="aside">
+    <aside id="aside-der" class="aside" hidden>
         <div id="header">
             <h2></h2>
         </div>
@@ -70,6 +87,4 @@
     <script src="scripts/playlist.js"></script>
     <script src="scripts/util.js"></script>
     <script src="scripts/mackup.js"></script>
-    <script>
-    </script>
 </html>
