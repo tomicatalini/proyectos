@@ -33,7 +33,7 @@ function setTracks(playlistId){
                     id: track.track.id,
                     nombre: track.track.name,
                     artistas: track.track.artists,
-                    img_url: track.track.album.images[0].url,
+                    img_url: track.track.album.images[2].url,
                     uri: track.track.uri
                 }
 
@@ -123,7 +123,7 @@ function setTracks(playlistId){
     });
 }
 
-function setPlaylist(data) {
+function setPlaylist(playlist_id) {
     const playlistXL = document.getElementById('playlist-xl');
     const imgPlaylist = playlistXL.querySelector('.header img');
     const nombrePlaylist = playlistXL.querySelector('.header h2');
@@ -133,37 +133,40 @@ function setPlaylist(data) {
     const listaPlaylist = playlistXL.querySelector('.lista-playlist');
     let tracks = document.createElement('DIV');
     
-    tracks.setAttribute('id', 'tracks');
-    imgPlaylist.setAttribute('src', data.images[0].url);
-    nombrePlaylist.textContent = data.name;
-    ownerPlaylist.textContent = data.owner.display_name;
+    let playlist = null;
+    let cantPlaylists = globalThis.playlists.length;
+    for(let i = 0; i < cantPlaylists; i++){
+        let pl = globalThis.playlists[i];
+        if(pl.id == playlist_id){
+            playlist = pl;
+            break;
+        }
+    }
     
-    if(data.collaborative){
+    console.log(playlist);
+    tracks.setAttribute('id', 'tracks');
+    imgPlaylist.setAttribute('src', playlist.img_url);
+    nombrePlaylist.textContent = playlist.name;
+    ownerPlaylist.textContent = playlist.owner;
+    
+    if(playlist.collaborative){
         // console.log(data);
     }
 
-    tracksPlaylist.textContent = `${data.tracks.total} Canciones`;
+    tracksPlaylist.textContent = `${playlist.tracks.total} Canciones`;
     
-    for (const track of data.tracks.items) {        
+    for (const track of playlist.tracks) {        
         let trackDiv = document.createElement('DIV');
         let imgTrack = document.createElement('IMG');
         let div = document.createElement('DIV');
         let nameTrack = document.createElement('H3');
         let artistsTrack = document.createElement('H4');
-        console.log(track.track);
+
         trackDiv.classList.add('track');
-        imgTrack.setAttribute('src', track.track.album.images[2].url);
-        nameTrack.textContent = track.track.name;
-        
-        let cantArtistas = track.track.artists.length - 1;
-        artistsTrack.textContent = ''; 
-        for(let i = 0; i <= cantArtistas; i++ ){
-            if(i == cantArtistas){
-                artistsTrack.textContent += track.track.artists[i].name;
-            } else {
-                artistsTrack.textContent += `${track.track.artists[i].name}, `;
-            }
-        }
+
+        imgTrack.setAttribute('src', track.img_url);
+        nameTrack.textContent = track.name;
+        artistsTrack.textContent = track.artists;
 
         div.appendChild(nameTrack);
         div.appendChild(artistsTrack);
@@ -194,101 +197,77 @@ function setPlaylist(data) {
     // true);
 }
 
-function getPlaylists(user = '') {
-    solicitar('http://localhost:3000/me/playlists' + user)
-        .then( data => {
-            console.log(data);
+/**
+ * Setea una variable global (playlists) con las playlists de un usuario 
+ * @param {Nombre usuario de las playlists} user 
+ */
+function getPlaylists(url) {
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
             let playlistsGlobal = [];
-            
-            for(let playlist of data.items){                
-                
-                let datosPlaylist = {
-                    id: playlist.id,
-                    name: playlist.name,
-                    tracks: [],
-                    isCollaborative: playlist.collaborative
-                }
+            try{
 
-                solicitar('http://localhost:3000/playlist/' + playlist.id)
-                    .then(playlistReq => {
-                        for (let item of playlistReq.tracks.items) {
+                for(let playlist of data.items){                
                     
+                    let datosPlaylist = {
+                        id: playlist.id,
+                        name: playlist.name,
+                        img_url: playlist.images[0].url,
+                        tracks: [],
+                        isCollaborative: playlist.collaborative,
+                        owner: playlist.owner.display_name
+                    }
+    
+                    playlistsGlobal.unshift(datosPlaylist);
+                }
+                return Promise.resolve(playlistsGlobal);
+            } catch(exception){
+                return Promise.reject(exception);
+            }
+        })
+        .then(data => {
+            for (const playlist of data) {
+                fetch('http://localhost:3000/playlist/' + playlist.id)
+                    .then(res => res.json())
+                    .then(track => {
+                        for (let item of track.tracks.items) {
                             let datosTrack = {
                                 id: item.track.id,
-                                nombre: item.track.name,
-                                artistas: "",
-                                img_url: item.track.album.images[0].url,
+                                name: item.track.name,
+                                artists: "",
+                                img_url: item.track.album.images[2].url,
                                 uri: item.track.uri
                             }
         
                             let cantArtistas = item.track.artists.length - 1;
                             for(let j = 0; j <= cantArtistas; j++){
                                 if(j == cantArtistas){
-                                    datosTrack.artistas += item.track.artists[j].name;
+                                    datosTrack.artists += item.track.artists[j].name;
                                 } else {
-                                    datosTrack.artistas += `${item.track.artists[j].name}, `;
+                                    datosTrack.artists += `${item.track.artists[j].name}, `;
                                 }
                             }
         
-                            datosPlaylist.tracks.unshift(datosTrack);
+                            playlist.tracks.unshift(datosTrack);
                         }
-                        
-                        playlistsGlobal.unshift(datosPlaylist);
-                        globalThis.playlists = playlistsGlobal;
-                        setPlaylistBar();
-                    })
-                    .catch(error => console.log(error));                                   
-
+                    });                
             }
-    })
-    .catch(error => console.log(error));
+            globalThis.playlists = data;
+            console.log(globalThis.playlists);
+        })
+        .catch(error => console.log(error))
+        .finally(() => setPlaylistBar());  
 }
 
-$('#misPlaylist').click( () => {
-    getPlaylists('');
-}); 
-
-// $('#misPlaylist').focus( () => {
-
-//     solicitar('http://localhost:3000/me/playlists').then( data => {
-//         if(data){
-//             // armarPlaylist(data);
-//             setPlaylistBar(data);
-//         } else {
-//             console.log('No hay datos del usuario');
-//         }
-//     });
-
-// });
-
-$('#misPlaylist').focus();
-
-
-$('#other #user-name').keypress( (evt) => {
-    if(evt.key == 'Enter'){
-        let user = evt.target.value ? evt.target.value : "no cargo nada";
-        solicitar('http://localhost:3000/other/playlists/' + user)
-            .then(data => {                
-                if(data){
-                    // armarPlaylist(data);
-                    setPlaylistBar(data);
-                } else {
-                    console.log('No hay datos del usuario');
-                }
-            });
-    }
-});
-
-$('#playlist-xl button').click( () => {
-
-});
-
+/**
+ * Muestra en pantalla las playlists del usuario
+ */
 function setPlaylistBar(){
     const playlistsWrap = document.getElementById('playlist-bar-wrap');
     const playlists = document.createElement('DIV');
     playlists.setAttribute('id', 'playlists-bar');
 
-    console.log(globalThis.playlists);
     for( let playlist of globalThis.playlists){
         
         let playlistDiv = document.createElement('DIV');
@@ -312,10 +291,7 @@ function setPlaylistBar(){
         playlistDiv.appendChild(name);
         playlistDiv.appendChild(collaborative);
 
-        playlistDiv.addEventListener('click', () => {
-            solicitar('/playlist/' + playlist.id).then( data => setPlaylist(data));
-        })
-
+        playlistDiv.addEventListener('click', () => setPlaylist(playlist.id));
         playlists.appendChild(playlistDiv);
     }
 
@@ -326,4 +302,24 @@ function setPlaylistBar(){
         playlistsWrap.appendChild(playlists);
     }
 }
+
+//$('#misPlaylist').click( () => getPlaylists('http://localhost:3000/me/playlists')); 
+$('#misPlaylist').focus( () => getPlaylists('http://localhost:3000/me/playlists'));
+
+$('#misPlaylist').focus();
+
+
+$('#other #user-name').keypress( (evt) => {
+    if(evt.key == 'Enter'){
+        let user = evt.target.value ? evt.target.value : "no cargo nada";
+
+        getPlaylists(`http://localhost:3000/other/playlists/${user}`);
+    }
+});
+
+$('#playlist-xl button').click( () => {
+
+});
+
+
 
