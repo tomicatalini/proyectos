@@ -1,12 +1,34 @@
 let parametros = getHashParams(window.location.hash);
 let server_status = parametros.status ? parametros.status : null;
 var listening = false;
+let hora_actual = new Date().getHours();
 
 if(server_status){
     if(server_status !== '200') {
         console.log('NO FUNCIONA EL SERVER BRO');
     } else {
-        
+        const headerPrueba = document.getElementById('header');
+        const mainPrueba = document.querySelector('.main');        
+        let scroll_pos = 0;
+
+        mainPrueba.onscroll = function(e){            
+            scroll_pos = mainPrueba.scrollTop;
+            if(scroll_pos > 100) {
+                headerPrueba.style.backgroundColor = `rgba(35,61,96,1)`;
+                headerPrueba.style.transition = 'all 0.5s ease-in';
+            } else {
+                headerPrueba.style.backgroundColor = `rgba(35,61,96,0)`;
+            }
+        };
+
+        let titulo = document.querySelector('.main .titulo');
+        if(hora_actual >= 7 && hora_actual <= 13){
+            titulo.textContent = '¡Buenos Dias!';
+        } else if(hora_actual > 13 && hora_actual <= 20){
+            titulo.textContent = '¡Buenas Tardes!';
+        } else {
+            titulo.textContent = '¡Buenas Noches!';
+        }
         /**
          * Solicitud datos personales (user_name) y setearlo.
          */
