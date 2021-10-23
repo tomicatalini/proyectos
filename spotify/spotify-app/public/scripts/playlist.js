@@ -1,12 +1,14 @@
 function solicitar(url){
     let resultado = fetch(url)
-                            .then(res => res.json());
+                            .then(res => res.json())
+                            .catch(error => error);
 
     return resultado;
 }
 function solicitarPOST(url, ops){
     let resultado = fetch(url, ops)
-                            .then(res => res.json());
+                            .then(res => res.json())
+                            .catch(error => error);
 
     return resultado;
 }
@@ -14,11 +16,7 @@ function solicitarPOST(url, ops){
 function setTracks(playlistId){
     solicitar('/playlist/' + playlistId).then( data => {
         if(data){
-            let datosPlaylist = {
-                id: playlistId,
-                nombre: data.name,
-                tracks: []
-            }
+            let tracksGLobal = [];
 
             const aside_der = document.getElementById('aside-der');
             const tituloSelectedPlaylist = document.querySelector('#aside-der h2');
@@ -38,7 +36,8 @@ function setTracks(playlistId){
                     img_url: track.track.album.images[0].url,
                     uri: track.track.uri
                 }
-                datosPlaylist.tracks.unshift(datosTrack);
+
+                tracksGLobal.unshift(datosTrack);
 
                 let trackUri = document.createElement('SPAN');
                 trackUri.setAttribute('hidden', 'hidden');
@@ -99,6 +98,12 @@ function setTracks(playlistId){
                 song.appendChild(accionesDiv);
 
                 tracksDiv.appendChild(song);
+            }
+
+            for (let playlist of globalThis.playlists) {
+                if(playlist.id == playlistId){
+                    playlist.track = tracksGLobal;
+                }
             }
 
             if(tracksDivExistente){
@@ -189,31 +194,72 @@ function setPlaylist(data) {
     // true);
 }
 
+function getPlaylists(user = '') {
+    solicitar('http://localhost:3000/me/playlists' + user)
+        .then( data => {
+            console.log(data);
+            let playlistsGlobal = [];
+            
+            for(let playlist of data.items){                
+                
+                let datosPlaylist = {
+                    id: playlist.id,
+                    name: playlist.name,
+                    tracks: [],
+                    isCollaborative: playlist.collaborative
+                }
+
+                solicitar('http://localhost:3000/playlist/' + playlist.id)
+                    .then(playlistReq => {
+                        for (let item of playlistReq.tracks.items) {
+                    
+                            let datosTrack = {
+                                id: item.track.id,
+                                nombre: item.track.name,
+                                artistas: "",
+                                img_url: item.track.album.images[0].url,
+                                uri: item.track.uri
+                            }
+        
+                            let cantArtistas = item.track.artists.length - 1;
+                            for(let j = 0; j <= cantArtistas; j++){
+                                if(j == cantArtistas){
+                                    datosTrack.artistas += item.track.artists[j].name;
+                                } else {
+                                    datosTrack.artistas += `${item.track.artists[j].name}, `;
+                                }
+                            }
+        
+                            datosPlaylist.tracks.unshift(datosTrack);
+                        }
+                        
+                        playlistsGlobal.unshift(datosPlaylist);
+                        globalThis.playlists = playlistsGlobal;
+                        setPlaylistBar();
+                    })
+                    .catch(error => console.log(error));                                   
+
+            }
+    })
+    .catch(error => console.log(error));
+}
+
 $('#misPlaylist').click( () => {
+    getPlaylists('');
+}); 
 
-    solicitar('http://localhost:3000/me/playlists').then( data => {
-        if(data){
-            // armarPlaylist(data);
-            setPlaylistBar(data);
-        } else {
-            console.log('No hay datos del usuario');
-        }
-    });
+// $('#misPlaylist').focus( () => {
 
-});
+//     solicitar('http://localhost:3000/me/playlists').then( data => {
+//         if(data){
+//             // armarPlaylist(data);
+//             setPlaylistBar(data);
+//         } else {
+//             console.log('No hay datos del usuario');
+//         }
+//     });
 
-$('#misPlaylist').focus( () => {
-
-    solicitar('http://localhost:3000/me/playlists').then( data => {
-        if(data){
-            // armarPlaylist(data);
-            setPlaylistBar(data);
-        } else {
-            console.log('No hay datos del usuario');
-        }
-    });
-
-});
+// });
 
 $('#misPlaylist').focus();
 
@@ -233,22 +279,17 @@ $('#other #user-name').keypress( (evt) => {
     }
 });
 
-function setPlaylistBar(data){
+$('#playlist-xl button').click( () => {
+
+});
+
+function setPlaylistBar(){
     const playlistsWrap = document.getElementById('playlist-bar-wrap');
     const playlists = document.createElement('DIV');
     playlists.setAttribute('id', 'playlists-bar');
 
-    let playlistsGlobal = [];
-    // globalThis.playlists = [];
-
-    for( let playlist of data.items){
-        
-        let datosPlaylist = {
-            id: playlist.id,
-            name: playlist.name,
-            tracks: [],
-            isCollaborative: playlist.collaborative
-        }
+    console.log(globalThis.playlists);
+    for( let playlist of globalThis.playlists){
         
         let playlistDiv = document.createElement('DIV');
         let id = document.createElement('SPAN');
@@ -276,8 +317,6 @@ function setPlaylistBar(data){
         })
 
         playlists.appendChild(playlistDiv);
-
-        playlistsGlobal.unshift
     }
 
     let playlistsViejo = playlistsWrap.querySelector('#playlists-bar');
@@ -286,7 +325,5 @@ function setPlaylistBar(data){
     } else{
         playlistsWrap.appendChild(playlists);
     }
-    
-    globalThis.playlists = playlistsGlobal;
 }
 

@@ -136,7 +136,6 @@ h1 {
     position: fixed;
     top: 0;
     right: 0;
-    padding: 20px;
     color: white;
     overflow: scroll;
 }
@@ -420,4 +419,39 @@ footer{
 #playlist-xl .header .datos button:hover {
     cursor: pointer;
     background-color: rgba(29,185,84,.8);
+}
+
+
+/*ASIDE-DER*/
+#aside-der {
+    padding: 0 5px;
+}
+#aside-der #header {
+    padding: 10px 20px;
+}
+#aside-der .track {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    background-color: rgba(40,40,40,.8);
+    color: rgba(255,255,255,.8);
+}
+
+#aside-der .track .datos {
+    width: 80%;
+    font-size: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;    
+}
+#aside-der .track h3 {
+    font-weight: 500;
+}
+#aside-der .track .acciones {
+    width: 20%;
+}
+#aside-der .track span[class='material-icons'] {
+    font-size: 24px;
 }
