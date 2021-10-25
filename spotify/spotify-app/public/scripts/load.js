@@ -194,3 +194,20 @@ function setTrack(data){
 
     currentImg.setAttribute('src', imgURL);
 }
+
+$('#aside-der button').click(() => {
+    console.log(globalThis.queue);
+    for (const track of globalThis.queue) {        
+        let post = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({'uri': track.uri})                        
+        }
+        fetch('http://localhost:3000/me/add/queue', post)
+        .then(res => res.json())
+        .then(data => console.log(data))
+        .catch(error => console.log(error))        
+    }
+});

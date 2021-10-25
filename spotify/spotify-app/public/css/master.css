@@ -430,27 +430,36 @@ footer{
     padding: 10px 20px;
 }
 #aside-der .track {
-    display: flex;
-    flex-flow: row;
-    justify-content: space-between;
-    align-items: center;
+    width: 100%;
+    display: grid;
+    grid-template-columns: calc(60% - 10px) 30% 10%;
+    grid-gap: 5px;
     margin-bottom: 5px;
     background-color: rgba(40,40,40,.8);
     color: rgba(255,255,255,.8);
 }
-
 #aside-der .track .datos {
-    width: 80%;
     font-size: 12px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;    
 }
+#aside-der .track .playlist{
+    display: flex;
+    align-items: center;
+    font-size: 12px;    
+}
 #aside-der .track h3 {
     font-weight: 500;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 #aside-der .track .acciones {
-    width: 20%;
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
 }
 #aside-der .track span[class='material-icons'] {
     font-size: 24px;

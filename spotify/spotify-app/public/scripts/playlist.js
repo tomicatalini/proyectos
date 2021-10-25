@@ -143,7 +143,6 @@ function setPlaylist(playlist_id) {
         }
     }
     
-    console.log(playlist);
     tracks.setAttribute('id', 'tracks');
     imgPlaylist.setAttribute('src', playlist.img_url);
     nombrePlaylist.textContent = playlist.name;
@@ -153,7 +152,7 @@ function setPlaylist(playlist_id) {
         // console.log(data);
     }
 
-    tracksPlaylist.textContent = `${playlist.tracks.total} Canciones`;
+    tracksPlaylist.textContent = `${playlist.tracks.length} Canciones`;
     
     for (const track of playlist.tracks) {        
         let trackDiv = document.createElement('DIV');
@@ -161,6 +160,25 @@ function setPlaylist(playlist_id) {
         let div = document.createElement('DIV');
         let nameTrack = document.createElement('H3');
         let artistsTrack = document.createElement('H4');
+        let accionDiv = document.createElement('DIV');
+        let addToQueue = document.createElement('SPAN');
+        addToQueue.classList.add('material-icons');
+        addToQueue.textContent = 'add';
+
+        // addToQueue.onclick = () => {
+        //     let post = {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify({'uri': track.uri})                        
+        //     }
+        //     fetch('http://localhost:3000/me/add/queue', post)
+        //     .then(res => res.json())
+        //     .then(data => console.log(data))
+        //     .catch(error => console.log(error))
+        // }
+        accionDiv.appendChild(addToQueue);
 
         trackDiv.classList.add('track');
 
@@ -172,6 +190,8 @@ function setPlaylist(playlist_id) {
         div.appendChild(artistsTrack);
         trackDiv.appendChild(imgTrack);
         trackDiv.appendChild(div);
+        trackDiv.appendChild(accionDiv);
+
         tracks.appendChild(trackDiv);
     }
     
@@ -181,20 +201,53 @@ function setPlaylist(playlist_id) {
     } else {
         listaPlaylist.appendChild(tracks);
     }
+
+    document.querySelector('#playlist-xl button').onclick = function(){addPlaylistsQueue(playlist.tracks, playlist.name)}; 
+}
+
+function addPlaylistsQueue(tracks, playlist_name){
+    const tracksWrap = document.querySelector('#aside-der #tracks-wrap');
+    for(let track of tracks){
+        let trackCard = document.createElement('DIV');
+        let datos = document.createElement('DIV');
+        let acciones = document.createElement('DIV');
+        let playlistDiv = document.createElement('DIV');
+        let id = document.createElement('SPAN');
+        let name = document.createElement('H3');
+        let artistas = document.createElement('SPAN');
+        let playlistName = document.createElement('SPAN');
+        let removeIcon = document.createElement('SPAN');
         
-    // article.addEventListener('click', (evt) => {
-    //     let elem = evt.target;
-    //     while(!elem.classList.contains('playlist-id')){
-    //         if(elem.classList.contains('playlist')){
-    //             elem = elem.querySelector('.playlist-id');
-    //             break;
-    //         }
-    //         elem = elem.parentNode;
-    //     }
-        
-    //     setTracks(elem.textContent);            
-    // },
-    // true);
+        id.classList.add('id');
+        id.setAttribute('hidden','hidden');
+        id.textContent = track.id;
+        name.textContent = track.name;
+        artistas.classList.add('artists');
+        artistas.textContent = track.artists;
+        datos.classList.add('datos');
+        datos.appendChild(id);
+        datos.appendChild(name);
+        datos.appendChild(artistas);
+        playlistName.textContent = playlist_name;
+        playlistDiv.classList.add('playlist');
+        playlistDiv.appendChild(playlistName);
+        removeIcon.classList.add('material-icons');
+        removeIcon.textContent = 'remove';
+        removeIcon.addEventListener('click', (e) => {
+            globalThis.queue = globalThis.queue.filter(item => item.id != track.id);
+            document.getElementById('tracks-wrap').removeChild(e.target.parentNode.parentNode);
+        });
+        acciones.classList.add('acciones');
+        acciones.appendChild(removeIcon);
+        trackCard.classList.add('track');
+        trackCard.appendChild(datos);
+        trackCard.appendChild(playlistDiv);
+        trackCard.appendChild(acciones);
+
+        tracksWrap.appendChild(trackCard);
+    }
+    let lista = globalThis.queue ? globalThis.queue.concat(tracks) : tracks;
+    globalThis.queue = lista;
 }
 
 /**
@@ -285,7 +338,7 @@ function setPlaylistBar(){
         id.textContent = playlist.id;
         name.textContent = playlist.name;
         
-        playlist.collaborative ? collaborative.textContent = 'people' : collaborative.setAttribute('hidden', 'hidden'); 
+        playlist.isCollaborative ? collaborative.textContent = 'people' : collaborative.setAttribute('hidden', 'hidden'); 
         
         playlistDiv.appendChild(id);
         playlistDiv.appendChild(name);
@@ -321,5 +374,7 @@ $('#playlist-xl button').click( () => {
 
 });
 
-
+function removeTrack(id) {
+    globalThis.queue.filter(track => track.id !== id);
+}
 

@@ -180,7 +180,6 @@ app.get('/playlist/:playlist_id', (req, res) => {
 
     request.get(opciones, (error, response, body) => {
         if(!error && response.statusCode === 200){
-            console.log(body);
             res.json(body);
         } else {
             console.log(response.statusCode);
@@ -194,7 +193,6 @@ app.get('/other/playlists/:user_id', (req, res) => {
     console.log('/other/playlists');
     let access_token = app.locals.access_token;
     let user_id = req.params.user_id;
-    console.log(user_id);
     const opciones = {
         url: `https://api.spotify.com/v1/users/${user_id}/playlists`,
         headers: {
@@ -354,10 +352,17 @@ app.post('/me/add/queue', (req, res) => {
 
     request.post(opciones, (error, response, body) => {
         if(!error && response.statusCode === 204){
+            res.json(body);
             console.log('Se agrego a la queue');
+        } else if(!error && response.statusCode === 401){
+            console.log(`${body.error.status} : ${body.error.message}`);
+            //res.json(body);
+        } else if(!error && response.statusCode === 403){
+            console.log(`${body.error.status} : ${body.error.message}`);
+        } else if(!error && response.statusCode === 429){
+            console.log(`${body.error.status} : ${body.error.message}`);
         } else {
-            console.log('No se agrego un carajo a la queue');
-            console.log(body);
+            console.log(error);
         }
     });
 });
@@ -411,9 +416,9 @@ app.get('/active/:accion', (req,res) => {
     })
 });
 
-app.get('/refresh/:caller', (req, res) => {
+app.get('/refresh', (req, res) => {
     console.log('/refresh');
-    let caller = req.params.caller.substring(1);
+    //let caller = req.params.caller.substring(1);
     const ops = {
         url: 'https://accounts.spotify.com/api/token',
         form: {
@@ -439,7 +444,7 @@ app.get('/refresh/:caller', (req, res) => {
         }
     });
 
-    res.redirect('http://localhost:3000/' + caller);
+    //res.redirect('http://localhost:3000/' + caller);
 });
 
 console.log(`Server activo en el puerto ${app.get('port')}`);
