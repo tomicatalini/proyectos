@@ -17,28 +17,30 @@
             <a href="http://localhost:3000/login">
                 <img src="images/icons/01_RGB/02_PNG/Spotify_Icon_RGB_White.png" alt="Spotify" id="logo">
             </a>
-        </h1>   
+        </h1>
+        <div id="buscar">
+            <input type="text" name="" id="buscar-input" placeholder="Usuario">
+            <span class="material-icons">search</span>
+        </div>  
         <div id="user">
             <div class="user-img">
                 <span class="material-icons-outlined" style="font-size: 24px;">person</span>
             </div>
-            <span id="user-name"></span>
+            <span id="user-name">tomicatalini</span>
         </div>
     </header>
     <aside id="aside-izq" class="aside">
         <nav id="menu">
-            <button class="menu-item" id="misPlaylist">Mis playlists</button>
-            <div id="other">
-                <button class="menu-item" id="playlist-other">Playlists de</button>
-                <input type="text" id="user-name" placeholder="Nombre de usuario" hidden>
-            </div>
+            <button class="menu-item" id="inicio"> <span class="material-icons">home</span> Inicio</button>
+            <button class="menu-item" id="misPlaylist"> <span class="material-icons">bar_chart</span> Tu biblioteca</button>
+            <button class="menu-item" id="playlist-other"> <span class="material-icons">search</span> Buscar</button>
         </nav>
-        <div id="playlist-bar-wrap">
-
-        </div>
-        <div id="devices-wrap">
+        <div id="user-playlists"></div>
+    </aside>
+    <aside id="aside-der" class="aside">
+        <!-- <div id="devices-wrap">
             <span class="tituo">Dispositivos</span>
-            <!-- <div id="devices">
+            <div id="devices">
                 <div class="device" onload="this.querySelector('.activo').textContent == 'true' ? this.style.color = 'rgba(255,255,255,1)' : false">
                     <span class="id" hidden>id_dispositivo</span>
                     <span class="activo" hidden>true</span>
@@ -51,58 +53,250 @@
                     <span class="material-icons">smartphone</span>
                     <span class="nombre">A70</span>
                 </div>
-            </div> -->
-        </div>
-    </aside>
-    <aside id="aside-der" class="aside">
-        <div id="header">
+            </div>
+        </div> -->
+        <!-- <div id="header">
             <h2>Add to Queue</h2>
+            <span id="nro_tracks"></span>
             <button>Agregar</button>
         </div>
-        <div class="tracks" id="tracks-wrap">
-            <!-- <div class="track">                
-                <div class="datos">
-                    <span class="id" hidden></span>
-                    <h3>Track name</h3>
-                    <span class="artists">Artists</span>
-                </div>
-                <div class="playlist"><span>Playlist</span></div>
-                <div class="acciones">
-                    <span class="material-icons">remove</span>
-                </div>
-            </div> -->
-            <!-- <div class="track">
-                <div class="datos">
+        <div id="tracks-container">
+            <div class="playlist">
+                <div class="top-bar">
+                    <span class="title">Playlist</span>
                     <div>
-                        <span class="id" hidden></span>
-                        <h3>Track name</h3>
-                        <span class="artists">Artists</span>
+                        <span class="nro_tracks">39</span>
+                        <span class="material-icons expand_less">expand_less</span>
+                        <span class="material-icons expand_more">expand_more</span>
                     </div>
-                    <span>Playlist</span>
                 </div>
-                <div class="acciones">
-                    <span class="material-icons">remove</span>
+                <div class="tracks">
+                    <div class="track">
+                        <div class="datos">
+                            <span class="id" hidden></span>
+                            <h3>Track name</h3>
+                            <span class="artists">Artists</span>
+                        </div>
+                        <div class="acciones">
+                            <span class="material-icons">remove</span>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="datos">
+                            <span class="id" hidden></span>
+                            <h3>Track name</h3>
+                            <span class="artists">Artists</span>
+                        </div>
+                        <div class="acciones">
+                            <span class="material-icons">remove</span>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="datos">
+                            <span class="id" hidden></span>
+                            <h3>Track name</h3>
+                            <span class="artists">Artists</span>
+                        </div>
+                        <div class="acciones">
+                            <span class="material-icons">remove</span>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="datos">
+                            <span class="id" hidden></span>
+                            <h3>Track name</h3>
+                            <span class="artists">Artists</span>
+                        </div>
+                        <div class="acciones">
+                            <span class="material-icons">remove</span>
+                        </div>
+                    </div><div class="track">
+                        <div class="datos">
+                            <span class="id" hidden></span>
+                            <h3>Track name</h3>
+                            <span class="artists">Artists</span>
+                        </div>
+                        <div class="acciones">
+                            <span class="material-icons">remove</span>
+                        </div>
+                    </div>
                 </div>
-            </div> -->
-        </div>
+            </div>
+            <div class="playlist">
+                <div class="top-bar">
+                    <span class="title">Playlist</span>
+                    <div>
+                        <span class="nro_tracks">39</span>
+                        <span class="material-icons expand_less">expand_less</span>
+                        <span class="material-icons expand_more">expand_more</span>
+                    </div>
+                </div>
+                <div class="tracks">
+                    <div class="track">
+                        <div class="datos">
+                            <span class="id" hidden></span>
+                            <h3>Track name</h3>
+                            <span class="artists">Artists</span>
+                        </div>
+                        <div class="acciones">
+                            <span class="material-icons">remove</span>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="datos">
+                            <span class="id" hidden></span>
+                            <h3>Track name</h3>
+                            <span class="artists">Artists</span>
+                        </div>
+                        <div class="acciones">
+                            <span class="material-icons">remove</span>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="datos">
+                            <span class="id" hidden></span>
+                            <h3>Track name</h3>
+                            <span class="artists">Artists</span>
+                        </div>
+                        <div class="acciones">
+                            <span class="material-icons">remove</span>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="datos">
+                            <span class="id" hidden></span>
+                            <h3>Track name</h3>
+                            <span class="artists">Artists</span>
+                        </div>
+                        <div class="acciones">
+                            <span class="material-icons">remove</span>
+                        </div>
+                    </div><div class="track">
+                        <div class="datos">
+                            <span class="id" hidden></span>
+                            <h3>Track name</h3>
+                            <span class="artists">Artists</span>
+                        </div>
+                        <div class="acciones">
+                            <span class="material-icons">remove</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="playlist">
+                <div class="top-bar">
+                    <span class="title">Playlist</span>
+                    <div>
+                        <span class="nro_tracks">39</span>
+                        <span class="material-icons expand_less">expand_less</span>
+                        <span class="material-icons expand_more">expand_more</span>
+                    </div>
+                </div>
+                <div class="tracks">
+                    <div class="track">
+                        <div class="datos">
+                            <span class="id" hidden></span>
+                            <h3>Track name</h3>
+                            <span class="artists">Artists</span>
+                        </div>
+                        <div class="acciones">
+                            <span class="material-icons">remove</span>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="datos">
+                            <span class="id" hidden></span>
+                            <h3>Track name</h3>
+                            <span class="artists">Artists</span>
+                        </div>
+                        <div class="acciones">
+                            <span class="material-icons">remove</span>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="datos">
+                            <span class="id" hidden></span>
+                            <h3>Track name</h3>
+                            <span class="artists">Artists</span>
+                        </div>
+                        <div class="acciones">
+                            <span class="material-icons">remove</span>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="datos">
+                            <span class="id" hidden></span>
+                            <h3>Track name</h3>
+                            <span class="artists">Artists</span>
+                        </div>
+                        <div class="acciones">
+                            <span class="material-icons">remove</span>
+                        </div>
+                    </div><div class="track">
+                        <div class="datos">
+                            <span class="id" hidden></span>
+                            <h3>Track name</h3>
+                            <span class="artists">Artists</span>
+                        </div>
+                        <div class="acciones">
+                            <span class="material-icons">remove</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
         <footer></footer>
     </aside>
     
-    <div class="main">
-        <h2 class="titulo" hidden>¡Buenos Dias!</h2>
-        <div id="playlist-xl">
+    <div class="main">        
+        <table id="playlist-table">
+            <tr id="t-header">
+                <th class="t-nr">#</th>
+                <th class="t-id" hidden>id</th>
+                <th class="t-title">TITULO</th>
+                <th class="t-duration"><span class="material-icons">schedule</span></th>
+                <th class="t-actions"><span class="material-icons">compare_arrows</span></th>
+            </tr>
+            <!-- <tr>
+                <td>1</td>
+                <td hidden>sadsa</td>
+                <td class="td-data">
+                    <img src="" alt="">
+                    <div>
+                        <p class="title">Titulo cancion</p>
+                        <p class="artists">Artistas</p>
+                    </div>
+                </td>
+                <td>3:25</td>
+                <td>+</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td hidden>sadsa</td>
+                <td class="td-title">
+                    <img src="" alt="">
+                    <div>
+                        <p style="font-weight: 500;">Titulo cancion</p>
+                        <p style="font-weight: 300; font-size: 13px;">Artistas</p>
+                    </div>
+                </td>
+                <td>3:25</td>
+                <td>+</td>
+            </tr> -->
+        </table>
+        <!-- <div id="playlist-xl">
             <div class="header">
-                <img src="" alt="">
+                <img>
                 <div class="datos">
-                    <h2>Top 50: Argentina</h2>
+                    <h2></h2>
                     <span class="owner" style="font-weight: bold;"></span>
                     <span class="ft"></span>
-                    <span class="tracks">50 canciones</span>
+                    <span class="tracks"></span>
                     <div class="acciones">
                         <button>AGREGAR</button>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="lista-playlist">
                 <!-- <div class="track">
                     <img src="" alt="">
