@@ -166,6 +166,7 @@ function setPlaylist(playlist_id) {
         let img = document.createElement('IMG');
         let title = document.createElement('P');
         let artists = document.createElement('P');
+        let div = document.createElement('DIV');
 
         id.setAttribute('hidden', 'hidden');
         number.textContent = `${i}`;
@@ -175,11 +176,13 @@ function setPlaylist(playlist_id) {
         title.classList.add('title');
         artists.textContent = track.artists;
         artists.classList.add('artists');
+        div.appendChild(title);
+        div.appendChild(artists);
         data.classList.add('td-data');
         data.appendChild(img);
-        data.appendChild(title);
-        data.appendChild(artists);
-        duration.textContent = Number.parseInt(track.duration / 60000);
+        data.appendChild(div);
+
+        duration.textContent = new Date(track.duration).toString().substring(20,25);
         actions.textContent = '+';
         
         row.appendChild(number);

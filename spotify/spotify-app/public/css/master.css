@@ -503,12 +503,15 @@ footer{
 
 
 #playlist-table {
-    width: 100%;
+    width: 90%;
+    font-size: 14px;
     text-align: center;
     color: rgba(255, 255, 255, 1);
     border-spacing: 0;
 }
-
+#playlist-table .t-title {
+    text-align: left;
+}
 #playlist-table tr {
     padding: 0 10px;
     margin: 5px 0;
@@ -522,7 +525,6 @@ footer{
     text-align: left;
     align-items: center;
 }
-
 #playlist-table .td-data img {
     width: 40px;
     height: 40px;
@@ -530,9 +532,11 @@ footer{
     background-color: blue;
 }
 #playlist-table .td-data .title {
-    font-weight: 500;
+    font-weight: 400;
+    color: rgba(255, 255, 255, .9);  
 }
 #playlist-table .td-data .artists {
+    color: rgba(255, 255, 255, .6);  
     font-size: 13px;
     font-weight: 300;
 }
