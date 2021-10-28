@@ -125,123 +125,78 @@ function setTracks(playlistId){
 }
 
 function setPlaylist(playlist_id) {
-    // const playlistXL = document.getElementById('playlist-xl');
-    // const imgPlaylist = playlistXL.querySelector('.header img');
-    // const nombrePlaylist = playlistXL.querySelector('.header h2');
-    // const ownerPlaylist = playlistXL.querySelector('.header .owner');
-    // const featPlaylist = playlistXL.querySelector('.header .ft');
-    // const tracksPlaylist = playlistXL.querySelector('.header .tracks');
-    // const listaPlaylist = playlistXL.querySelector('.lista-playlist');
-    const playlistTable = document.getElementById('playlist-table');
-    // let tracks = document.createElement('DIV');
-    
-    let playlist = null;
-    let cantPlaylists = globalThis.playlists.length;
-    for(let i = 0; i < cantPlaylists; i++){
-        let pl = globalThis.playlists[i];
-        if(pl.id == playlist_id){
-            playlist = pl;
-            break;
+    const plId = document.querySelector('#mi-library #playlist-table .t-id');
+
+    if(plId.textContent != playlist_id){
+        const pl = document.getElementById('mi-library');        
+        const plImg = pl.querySelector('header img');
+        const plName = pl.querySelector('header h2');
+        const plOwner = pl.querySelector('header .owner');
+        const plTracks = pl.querySelector('header .tracks');
+        const plTable = pl.querySelector('#playlist-table');
+        const plTableBody = plTable.querySelector('#t-body');
+        let plTableBodyNew = document.createElement('TBODY');
+
+        //GET PLAYLIST
+        let playlists = globalThis.playlists;
+        let playlist = playlists ? playlists.filter(pl => pl.id == playlist_id)[0] : null;
+        
+        //SET HEADER
+        plId.textContent = playlist.id;
+        plImg.setAttribute('src', playlist.img_url);
+        plName.textContent = playlist.name;
+        plOwner.textContent = playlist.owner;
+        plTracks.textContent = `${playlist.tracks.length} canciones`;     
+        
+        //SET TABLE BODY (TRACKS)
+        let i = 1;
+        for (const track of playlist.tracks) {     
+            let row = document.createElement('TR');
+            let number = document.createElement('TD');
+            let id = document.createElement('TD');
+            let data = document.createElement('TD');
+            let duration = document.createElement('TD');
+            let actions = document.createElement('TD');
+            let img = document.createElement('IMG');
+            let title = document.createElement('P');
+            let artists = document.createElement('P');
+            let div = document.createElement('DIV');
+
+            id.setAttribute('hidden', 'hidden');
+            number.textContent = `${i}`;
+            number.classList.add('td-nr');
+            id.textContent = track.id;
+            id.classList.add('td-id');
+            img.setAttribute('src', track.img_url);
+            title.textContent = track.name;
+            title.classList.add('title');
+            artists.textContent = track.artists;
+            artists.classList.add('artists');
+            div.appendChild(title);
+            div.appendChild(artists);
+            data.classList.add('td-data');
+            data.appendChild(img);
+            data.appendChild(div);
+
+            duration.textContent = new Date(track.duration).toString().substring(20,25);
+            duration.classList.add('td-duration');
+            actions.textContent = '+';
+            actions.classList.add('td-actions');
+            
+            row.appendChild(number);
+            row.appendChild(id);
+            row.appendChild(data);
+            row.appendChild(duration);
+            row.appendChild(actions);
+            
+            plTableBodyNew.appendChild(row);
+            i++;
         }
-    }
-    
-    // tracks.setAttribute('id', 'tracks');
-    // imgPlaylist.setAttribute('src', playlist.img_url);
-    // nombrePlaylist.textContent = playlist.name;
-    // ownerPlaylist.textContent = playlist.owner;
-    
-    if(playlist.collaborative){
-        // console.log(data);
-    }
 
-    // tracksPlaylist.textContent = `${playlist.tracks.length} Canciones`;
-    let i = 1;
-    for (const track of playlist.tracks) {     
-        let row = document.createElement('TR');
-        let number = document.createElement('TD');
-        let id = document.createElement('TD');
-        let data = document.createElement('TD');
-        let duration = document.createElement('TD');
-        let actions = document.createElement('TD');
-        let img = document.createElement('IMG');
-        let title = document.createElement('P');
-        let artists = document.createElement('P');
-        let div = document.createElement('DIV');
-
-        id.setAttribute('hidden', 'hidden');
-        number.textContent = `${i}`;
-        id.textContent = track.id;
-        img.setAttribute('src', track.img_url);
-        title.textContent = track.name;
-        title.classList.add('title');
-        artists.textContent = track.artists;
-        artists.classList.add('artists');
-        div.appendChild(title);
-        div.appendChild(artists);
-        data.classList.add('td-data');
-        data.appendChild(img);
-        data.appendChild(div);
-
-        duration.textContent = new Date(track.duration).toString().substring(20,25);
-        actions.textContent = '+';
-        
-        row.appendChild(number);
-        row.appendChild(id);
-        row.appendChild(data);
-        row.appendChild(duration);
-        row.appendChild(actions);
-        
-        playlistTable.appendChild(row);
-        
-        // let trackDiv = document.createElement('DIV');
-        // let imgTrack = document.createElement('IMG');
-        // let div = document.createElement('DIV');
-        // let nameTrack = document.createElement('H3');
-        // let artistsTrack = document.createElement('H4');
-        // let accionDiv = document.createElement('DIV');
-        // let addToQueue = document.createElement('SPAN');
-        // addToQueue.classList.add('material-icons');
-        // addToQueue.textContent = 'add';
-
-        // addToQueue.onclick = () => {
-        //     let post = {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({'uri': track.uri})                        
-        //     }
-        //     fetch('http://localhost:3000/me/add/queue', post)
-        //     .then(res => res.json())
-        //     .then(data => console.log(data))
-        //     .catch(error => console.log(error))
-        // }
-        // accionDiv.appendChild(addToQueue);
-
-        // trackDiv.classList.add('track');
-
-        // imgTrack.setAttribute('src', track.img_url);
-        // nameTrack.textContent = track.name;
-        // artistsTrack.textContent = track.artists;
-
-        // div.appendChild(nameTrack);
-        // div.appendChild(artistsTrack);
-        // trackDiv.appendChild(imgTrack);
-        // trackDiv.appendChild(div);
-        // trackDiv.appendChild(accionDiv);
-
-        // tracks.appendChild(trackDiv);
-        i++;
-    }
-    
-    // let tracksViejo = listaPlaylist.querySelector('#tracks');
-    // if(tracksViejo){
-    //     listaPlaylist.replaceChild(tracks, tracksViejo);
-    // } else {
-    //     listaPlaylist.appendChild(tracks);
-    // }
-
-    // document.querySelector('#playlist-xl button').onclick = function(){addPlaylistsQueue(playlist.tracks, playlist.name)}; 
+        plTableBody ? plTableBody.remove() : null;
+        plTableBodyNew.setAttribute('id', 't-body');
+        plTable.appendChild(plTableBodyNew);
+    }   
 }
 
 function addPlaylistsQueue(tracks, playlist_name){

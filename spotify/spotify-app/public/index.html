@@ -249,65 +249,32 @@
     </aside>
     
     <div class="main">        
-        <table id="playlist-table">
-            <tr id="t-header">
-                <th class="t-nr">#</th>
-                <th class="t-id" hidden>id</th>
-                <th class="t-title">TITULO</th>
-                <th class="t-duration"><span class="material-icons">schedule</span></th>
-                <th class="t-actions"><span class="material-icons">compare_arrows</span></th>
-            </tr>
-            <!-- <tr>
-                <td>1</td>
-                <td hidden>sadsa</td>
-                <td class="td-data">
-                    <img src="" alt="">
-                    <div>
-                        <p class="title">Titulo cancion</p>
-                        <p class="artists">Artistas</p>
-                    </div>
-                </td>
-                <td>3:25</td>
-                <td>+</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td hidden>sadsa</td>
-                <td class="td-title">
-                    <img src="" alt="">
-                    <div>
-                        <p style="font-weight: 500;">Titulo cancion</p>
-                        <p style="font-weight: 300; font-size: 13px;">Artistas</p>
-                    </div>
-                </td>
-                <td>3:25</td>
-                <td>+</td>
-            </tr> -->
-        </table>
-        <!-- <div id="playlist-xl">
-            <div class="header">
+        <section id="home"></section>
+        <section id="mi-library">
+            <header>
                 <img>
                 <div class="datos">
-                    <h2></h2>
-                    <span class="owner" style="font-weight: bold;"></span>
-                    <span class="ft"></span>
-                    <span class="tracks"></span>
+                    <h2>Título Playlist</h2>
+                    <span class="owner">creador</span>
+                    <span class="tracks">50 canciones</span>
                     <div class="acciones">
                         <button>AGREGAR</button>
                     </div>
                 </div>
-            </div> -->
-            <div class="lista-playlist">
-                <!-- <div class="track">
-                    <img src="" alt="">
-                    <div>
-                        <h3>Nombre Canción</h3>
-                        <h4>Artistas</h4>
-                    </div>
-                </div> -->
-            </div>
-            
-        </div>
+            </header>
+            <table id="playlist-table">
+                <tr id="t-header">
+                    <th class="t-nr">#</th>
+                    <th class="t-id" hidden>id</th>
+                    <th class="t-title">TITULO</th>
+                    <th class="t-duration"><span class="material-icons">schedule</span></th>
+                    <th class="t-actions"><span class="material-icons">compare_arrows</span></th>
+                </tr>
+                <!-- <tbody id="t-body"></tbody> -->
+            </table>
+        </section>
+        <section id="other-library"></section>
+        <section id="queue"></section>
         <footer></footer>
     </div>
     <div id="reproductor">
