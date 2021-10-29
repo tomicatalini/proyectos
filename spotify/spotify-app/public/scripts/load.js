@@ -10,12 +10,17 @@ if(server_status){
         
         // //header cambie de color al scrollear
         // const headerPrueba = document.getElementById('header');
-        // const mainPrueba = document.querySelector('.main');        
+        // const mainPrueba = document.querySelector('.main');
+        // // const divPrueba = document.querySelector('.main');
+        // const body = document.querySelector('body');
+        // console.log(mainPrueba);  
         // let scroll_pos = 0;
 
-        // mainPrueba.onscroll = function(e){            
-        //     scroll_pos = mainPrueba.scrollTop;
+        // body.onscroll = function(e){            
+        //     scroll_pos = body.scrollTop;
+        //     console.log(scroll_pos);
         //     if(scroll_pos > 100) {
+                
         //         headerPrueba.style.backgroundColor = `rgba(35,61,96,1)`;
         //         headerPrueba.style.transition = 'all 0.5s ease-in';
         //     } else {
@@ -125,6 +130,7 @@ if(server_status){
         //         $('#other #user-name').hide("slow");                
         //     }
         // });
+        
         let items = document.querySelectorAll('.menu-item');
         for (let btn of items) {
             btn.addEventListener('click', () => {

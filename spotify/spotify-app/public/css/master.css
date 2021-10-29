@@ -39,7 +39,7 @@ body {
     gap: 20px;
     align-content: center;
     padding: 0 20px;
-    background-color: rgba(35,61,96,1);
+    background-color: rgba(35,61,96,0);
     position: fixed;
     top: 0;
     left: var(--aside-izq-width);
@@ -243,7 +243,7 @@ h1 {
     top: 0;
     left: var(--aside-izq-width);
     background: rgba(20,20,20,1);
-    background: linear-gradient(180deg, rgba(35,61,96,1) 0%, rgba(20,20,20,1) 25%);
+    background: linear-gradient(180deg, rgba(35,61,96,1) 0%, rgba(20,20,20,1) 500px);
     /* background: linear-gradient(180deg, rgba(35,61,96,1) 0%, rgba(20,20,20,1) 5%); */
     padding: 80px 20px 40px;
     overflow: scroll;
@@ -471,53 +471,71 @@ footer{
 }
 
 /*PLAYLIST TABLE*/
-#playlist-table {
-    width: 700px;
-    margin: 20px auto;
-    font-size: 14px;
+.main .table {
+    width: 100%;
+    min-width: 200px;
+    margin: 20px 0;
+    color: rgba(255, 255, 255, .7);
+}
+
+.main .table .theader {
+    display: flex;
+    color: rgba(255, 255, 255, .4);
+    border-bottom: 1px solid rgba(255, 255, 255, .2);
+}
+.main .table .theader span {
+    padding: 10px 0;
+}
+.main .table span {
+    width: 50px;
+    min-width: 50px;
     text-align: center;
-    color: rgba(255, 255, 255, 1);
-    border-spacing: 0;
-    outline: 1px solid white;
 }
-#playlist-table .t-title {
-    width: 500px;
+.main .table .t-title {
+    min-width: 100px;
+    width: calc(100% - 90px);
+    display: flex;
+    align-items: flex-end;
     text-align: left;
-}
-#playlist-table tr {
     padding: 0 10px;
+}
+.main .table .t-title img {
+    width: 40px;
+    height: 40px;
+    margin-right: 20px;
+}
+.main .table .track {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 5px 0;
     margin: 5px 0;
 }
-#playlist-table tr:not(#t-header):hover {
-    background-color: rgba(255, 255, 255, .2);
+.main .table .track:hover {
+    background-color: rgba(255, 255, 255, .1);
 }
-#playlist-table .td-nr{width: 50px;}
-#playlist-table .td-id{}
-#playlist-table .td-duration{width: 50px;}
-#playlist-table .td-actions{width: 50px;}
-#playlist-table .td-data {
-    width: 500px;
-    display: flex;
-    text-align: left;
-    align-items: center;
+.main .table .track .data {
+    overflow: hidden;
+}
+.main .table .track .title {
+    font-size: 12px;
+    font-weight: 500;
+    color:rgba(255, 255, 255, 1);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-#playlist-table .td-data img {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-    background-color: blue;
-}
-#playlist-table .td-data .title {
-    font-weight: 400;
-    color: rgba(255, 255, 255, .9);
-    text-overflow: ellipsis;  
-}
-#playlist-table .td-data .artists {
-    color: rgba(255, 255, 255, .6);  
-    font-size: 13px;
+.main .table .track .artists{
+    font-size: 12px;
     font-weight: 300;
+    overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    color:rgba(255, 255, 255, .7);
+}
+.main .table .track .t-actions {
+    font-size: 24px;
+}
+.main .table .track .t-actions:hover {
+    cursor: pointer;
 }

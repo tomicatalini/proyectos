@@ -125,7 +125,7 @@ function setTracks(playlistId){
 }
 
 function setPlaylist(playlist_id) {
-    const plId = document.querySelector('#mi-library #playlist-table .t-id');
+    const plId = document.querySelector('#mi-library .datos .id');
 
     if(plId.textContent != playlist_id){
         const pl = document.getElementById('mi-library');        
@@ -133,10 +133,10 @@ function setPlaylist(playlist_id) {
         const plName = pl.querySelector('header h2');
         const plOwner = pl.querySelector('header .owner');
         const plTracks = pl.querySelector('header .tracks');
-        const plTable = pl.querySelector('#playlist-table');
-        const plTableBody = plTable.querySelector('#t-body');
-        let plTableBodyNew = document.createElement('TBODY');
-
+        const plTable = pl.querySelector('.table');
+        const plTableTbody = pl.querySelector('.table .tbody');
+        const plTableTbodyNew = document.createElement('DIV');
+        
         //GET PLAYLIST
         let playlists = globalThis.playlists;
         let playlist = playlists ? playlists.filter(pl => pl.id == playlist_id)[0] : null;
@@ -146,56 +146,58 @@ function setPlaylist(playlist_id) {
         plImg.setAttribute('src', playlist.img_url);
         plName.textContent = playlist.name;
         plOwner.textContent = playlist.owner;
-        plTracks.textContent = `${playlist.tracks.length} canciones`;     
+        plTracks.textContent = `${playlist.tracks.length} canciones`;             
         
         //SET TABLE BODY (TRACKS)
         let i = 1;
         for (const track of playlist.tracks) {     
-            let row = document.createElement('TR');
-            let number = document.createElement('TD');
-            let id = document.createElement('TD');
-            let data = document.createElement('TD');
-            let duration = document.createElement('TD');
-            let actions = document.createElement('TD');
+            let contenedor = document.createElement('DIV');
+            let number = document.createElement('SPAN');
+            let id = document.createElement('SPAN');
+            let div = document.createElement('DIV');
+            let data = document.createElement('DIV');
             let img = document.createElement('IMG');
             let title = document.createElement('P');
             let artists = document.createElement('P');
-            let div = document.createElement('DIV');
+            let duration = document.createElement('SPAN');
+            let actions = document.createElement('SPAN');
 
-            id.setAttribute('hidden', 'hidden');
             number.textContent = `${i}`;
-            number.classList.add('td-nr');
+            number.classList.add('t-count');
             id.textContent = track.id;
-            id.classList.add('td-id');
+            id.classList.add('t-id');
+            id.setAttribute('hidden', 'hidden');
             img.setAttribute('src', track.img_url);
             title.textContent = track.name;
             title.classList.add('title');
             artists.textContent = track.artists;
             artists.classList.add('artists');
-            div.appendChild(title);
-            div.appendChild(artists);
-            data.classList.add('td-data');
-            data.appendChild(img);
-            data.appendChild(div);
+            data.classList.add('data');
+            data.appendChild(title);
+            data.appendChild(artists);
+            div.appendChild(img);
+            div.appendChild(data);
+            div.classList.add('t-title');
 
             duration.textContent = new Date(track.duration).toString().substring(20,25);
-            duration.classList.add('td-duration');
+            duration.classList.add('t-duration');
             actions.textContent = '+';
-            actions.classList.add('td-actions');
+            actions.classList.add('t-actions');
             
-            row.appendChild(number);
-            row.appendChild(id);
-            row.appendChild(data);
-            row.appendChild(duration);
-            row.appendChild(actions);
+            contenedor.appendChild(number);
+            contenedor.appendChild(id);
+            contenedor.appendChild(div);
+            contenedor.appendChild(duration);
+            contenedor.appendChild(actions);
+            contenedor.classList.add('track');
             
-            plTableBodyNew.appendChild(row);
+            plTableTbodyNew.appendChild(contenedor);
             i++;
         }
 
-        plTableBody ? plTableBody.remove() : null;
-        plTableBodyNew.setAttribute('id', 't-body');
-        plTable.appendChild(plTableBodyNew);
+        plTableTbody ? plTableTbody.remove() : null;
+        plTableTbodyNew.classList.add('tbody');
+        plTable.appendChild(plTableTbodyNew);
     }   
 }
 

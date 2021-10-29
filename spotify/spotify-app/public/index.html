@@ -12,6 +12,7 @@
     </head>    
     <body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <div id="prueba" hidden></div>  
     <header id="header">
         <h1>
             <a href="http://localhost:3000/login">
@@ -255,6 +256,7 @@
                 <img>
                 <div class="datos">
                     <h2>Título Playlist</h2>
+                    <span class="id" hidden></span>
                     <span class="owner">creador</span>
                     <span class="tracks">50 canciones</span>
                     <div class="acciones">
@@ -262,16 +264,43 @@
                     </div>
                 </div>
             </header>
-            <table id="playlist-table">
-                <tr id="t-header">
-                    <th class="t-nr">#</th>
-                    <th class="t-id" hidden>id</th>
-                    <th class="t-title">TITULO</th>
-                    <th class="t-duration"><span class="material-icons">schedule</span></th>
-                    <th class="t-actions"><span class="material-icons">compare_arrows</span></th>
-                </tr>
-                <!-- <tbody id="t-body"></tbody> -->
-            </table>
+            <div class="table">
+                <div class="theader">
+                    <span class="t-count">#</span>
+                    <span class="t-title">Título</span>
+                    <span class="material-icons t-duration">schedule</span>
+                    <span class="material-icons t-actions">compare_arrows</span>
+                </div>
+                <div class="tbody">
+                    <div class="track">
+                        <span class="t-count">1</span>
+                        <span class=t-id hidden>34H2J35342H6G</span>
+                        <div class="t-title">
+                            <img>
+                            <div class="data">
+                                <p class="title">2:50 Remix</p>
+                                <p class="artists">MYA, Tini, Duki</p>
+                            </div>
+                        </div>
+                        <span class="t-duration">3:28</span>
+                        <span class="t-actions">+</span>
+                    </div>
+                    <div class="track">
+                        <span class="t-count">2</span>
+                        <span class=t-id hidden>34H2J35342H6G</span>
+                        <div class="t-title">
+                            <img>
+                            <div class="data">
+                                <p class="title">Turraka</p>
+                                <p class="artists">Kaleb Di Masi, Ecko, Papichamp, Blunted VAto, Bruno LC</p>
+                            </div>
+                        </div>
+                        <span class="t-duration">3:20</span>
+                        <span class="t-actions">+</span>
+                    </div>
+                </div>
+            </div>
+
         </section>
         <section id="other-library"></section>
         <section id="queue"></section>
