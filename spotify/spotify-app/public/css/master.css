@@ -474,7 +474,7 @@ footer{
 .main .table {
     width: 100%;
     min-width: 200px;
-    margin: 20px 0;
+    margin: 10px 0;
     color: rgba(255, 255, 255, .7);
 }
 
@@ -538,4 +538,23 @@ footer{
 }
 .main .table .track .t-actions:hover {
     cursor: pointer;
+}
+
+#mi-library .acciones {
+    display: flex;
+    margin: 10px 0;
+}
+
+#mi-library .acciones div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+    padding: 10px 12px;
+    color: white;
+    border-radius: 100%;
+    background-color: rgba(29,185,84,1);
+}
+#mi-library .acciones span {
+    font-size: 32px;
 }

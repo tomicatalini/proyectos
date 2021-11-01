@@ -97,27 +97,27 @@ if(server_status){
 
         //         devicesWrapDiv.appendChild(devicesDiv);
 
-        //         //Cargar REPRODUCTOR con datos de la ultima canción que se escuchó.
-        //         if(listening){
-        //             solicitar('http://localhost:3000/me/currentTrack/currently-playing')
-        //                 .then( data2 => {
-        //                     if(data2.error){
-        //                         console.log(`${data2.status}: ${data2.message}`);
-        //                     } else {
-        //                         setTrack(data2);
-        //                     }
-        //                 });
-        //         } else {
-        //             solicitar('http://localhost:3000/me/currentTrack/recently-played')
-        //                 .then( data2 => {
-        //                     if(data2.error){
-        //                         console.log(`${data2.status}: ${data2.message}`);
-        //                     } else {
-        //                         setTrack(data2);
-        //                     }
-        //                 });
-        //         }
-        //     });       
+                //Cargar REPRODUCTOR con datos de la ultima canción que se escuchó.
+                // if(listening){
+                    solicitar('http://localhost:3000/me/currentTrack/currently-playing')
+                        .then( data2 => {
+                            if(data2.error){
+                                console.log(`${data2.status}: ${data2.message}`);
+                            } else {
+                                setTrack(data2);
+                            }
+                        });
+                // } else {
+                    // solicitar('http://localhost:3000/me/currentTrack/recently-played')
+                    //     .then( data2 => {
+                    //         if(data2.error){
+                    //             console.log(`${data2.status}: ${data2.message}`);
+                    //         } else {
+                    //             setTrack(data2);
+                    //         }
+                    //     });
+                // }
+            // });       
 
         // /**
         //  * Set eventos del menu
